@@ -30,7 +30,7 @@ Request body content:
 ```
 
 Response code:
-- `201 Created`
+- `200 OK`
 - `401 Unauthorized`: credenziali errate
 - `500 Internal server error`: errore generico
 
@@ -289,11 +289,12 @@ Request parameters: None
 Request body content: None
 
 Response code:
-- `200 OK`
+- `201 Created`
 - `401 Unauthorized`: utente non autenticato
 - `500 Internal server error`: errore generico
 
 Vincoli di accesso: può essere chiamata solo da un utente autenticato
+
 
 ## Database Tables
 
