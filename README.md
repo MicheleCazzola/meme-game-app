@@ -30,11 +30,18 @@ Request body content:
 ```
 
 Response code:
-- `200 OK`
+- `201 Created`
 - `401 Unauthorized`: credenziali errate
 - `500 Internal server error`: errore generico
 
-Response body content: None
+Response body content:
+```
+{
+	"username": "user1",
+	"name": "Mario",
+	"surname": "Rossi"
+}
+```
 
 Vincoli di accesso: nessun vincolo
 
@@ -89,13 +96,13 @@ Vincoli di accesso: può essere chiamata solo da un utente autenticato
 
 ### Meme
 
-__Get collezione di tre meme differenti__
+__Get collezione di tre meme differenti, con annesse didascalie__
 
 URL: `/memegame/memes/match`
 
 HTTP method: GET
 
-Descrizione: recupera tre meme differenti dal database, in modo casuale, per giocare una partita completa
+Descrizione: recupera tre meme differenti dal database, in modo casuale, per giocare una partita completa; per ognuno di essi, ritorna due didascalie corrette e cinque errate.
 
 Request parameters: None
 
@@ -103,23 +110,30 @@ Request body content: None
 
 Response code:
 - `200 OK`
-- `401 Unauthorized` (utente non autenticato)
-- `500 Internal server error` (errore generico)
+- `401 Unauthorized`: utente non autenticato
+- `404 Not found`: meme o didascalie associate non trovati in numero richiesto
+- `500 Internal server error`: errore generico
 
 Response body content:
 ```
 [
 	{
-		"id": 2,
-		"name": "meme2.png"
+		"name": "meme2.png",
+		"correctCaptions": [
+			"Lorem ipsum",
+			...
+		],
+		"otherCaptions": [
+			...
+		]
 	},
 	{
-		"id": 4,
-		"name": "meme4.png"
+		"name": "meme4.png",
+		...
 	},
 	{
-		"id": 7,
-		"name": "meme7.png"
+		"name": "meme7.png",
+		...
 	}
 ]
 ```
@@ -127,11 +141,12 @@ Response body content:
 Vincoli di accesso: può essere chiamata solo da un utente autenticato
 
 __Get singolo meme__
+
 URL: `/memegame/memes/single`
 
 HTTP method: GET
 
-Descrizione: recupera un meme dal database in modo casuale
+Descrizione: recupera un meme dal database in modo casuale, insieme a due didascalie corrette e cinque errate.
 
 Request parameters: None
 
@@ -139,19 +154,27 @@ Response parameters: None
 
 Response code:
 - `200 OK`
-- `500 Internal server error` (errore generico)
+- `404 Not found`: meme o didascalie associate non trovati in numero richiesto
+- `500 Internal server error`: errore generico
 
 Response body content:
 ```
 {
-	"id": 6,
-	"name": "meme6.png"
+	"name": "meme6.png",
+	"correctCaptions": [
+		"Lorem ipsum",
+		...
+	],
+	"otherCaptions": [
+		"Lorem ipsum dolor sit amet"
+		...
+	]
 }
 ```
 
 Vincoli di accesso: nessun vincolo
 
-### Captions
+### Captions (non usato al momento)
 
 __Get due didascalie associate ad un meme__
 
@@ -254,20 +277,20 @@ Response body content:
 ```
 [
 	{	
+		"date": "2024-05-23",
 		"points": 10,
 		"rounds": [
 			{
-				"id": 1,
 				"meme": "meme2.png",
 				"points": 5,
 				"caption": "caption3"
 			},
 			{
-				"id": 2,
 				"meme": "meme5.png",
 				"points": 5,
 				"caption": "caption12"
-			}
+			},
+			...
 		]
 	},
 	...
@@ -286,7 +309,26 @@ Descrizione: inserisce nel database i dati della partita appena completata dall'
 
 Request parameters: None
 
-Request body content: None
+Request body content: 
+```
+[
+	{	
+		"meme": "meme2.png",
+		"guessed": true,
+		"caption": "Lorem ipsum"
+	},
+	{
+		"meme": "meme5.png",
+		"guessed": false,
+		"caption": ""
+	},
+	{
+		"meme": "meme8.png",
+		"guessed": false,
+		"caption": "Dolor sit amet"
+	}
+]
+```
 
 Response code:
 - `201 Created`
@@ -308,6 +350,7 @@ Vincoli di accesso: può essere chiamata solo da un utente autenticato
 - Tabella `match` - contiene:
   - `MatchId`: chiave primaria (autoincrementale) della partita 
   - `UserId`: chiave esterna all'id dell'utente che ha giocato la partita
+  - `Date`: data della registrazione della partita, in formato `YYYY-MM-DD`
 - Tabella `round` - contiene:
   - `MatchId`: chiave esterna all'id della partita e chiave primaria del round, insieme a _roundId_ (costituisce un indice unico con _memeId_)
   - `RoundId`: valore compreso tra 1 e 3, chiave primaria del round, insieme a _matchId_
@@ -338,5 +381,5 @@ Vincoli di accesso: può essere chiamata solo da un utente autenticato
 
 ## Users Credentials
 
-- username, password (plus any other requested info)
-- username, password (plus any other requested info)
+- "test1", "pwd1"
+- "test2", "pwd2"

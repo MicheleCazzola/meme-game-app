@@ -1,0 +1,42 @@
+###
+GET http://localhost:3001/memegame/memes/single
+
+###
+GET http://localhost:3001/memegame/memes/match
+
+###
+POST http://localhost:3001/memegame/sessions
+Content-Type: application/json
+
+{
+    "username": "test1",
+    "password": "pwd1"
+}
+
+###
+GET http://localhost:3001/memegame/sessions/current
+
+###
+DELETE http://localhost:3001/memegame/sessions/current
+
+###
+POST http://localhost:3001/memegame/matches
+Content-Type: application/json
+
+[
+	{	
+		"meme": "meme2.png",
+		"guessed": true,
+		"caption": "caption2C1"
+	},
+	{
+		"meme": "meme1.png",
+		"guessed": false,
+        "caption": ""
+	},
+	{
+		"meme": "meme4.png",
+		"guessed": false,
+		"caption": "captionX3"
+	}
+]
