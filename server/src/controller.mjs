@@ -1,17 +1,11 @@
-import { addMatch, addRound, getCaptionId, getCorrectCaptions, getMemeId, getNotAssociatedCaptions, getRandomMemes, getUserId, userLogin } from "./dao.mjs"
-import { MemeRound } from "./models.mjs";
+import { addMatch, addRound, getCorrectCaptions, getNotAssociatedCaptions, getRandomMemes, userLogin, getUserMatches, getRoundsOfMatch } from "./dao.mjs"
+import { Match, MemeRound } from "./models.mjs";
 
 // Authentication - User
 
 // Login
 async function getUser(username, password) {
     const result = await userLogin(username, password);
-    return result;
-}
-
-// Get user information
-async function getUserInfo(user) {
-    const result = await getUserInfo(user.username);
     return result;
 }
 
@@ -24,25 +18,21 @@ async function getMatchMemes() {
 
     let gameRounds = [];
     for (let meme of memes) {
-        try {
-            const correctCaptions = await getCorrectCaptions(meme);
+        const correctCaptions = await getCorrectCaptions(meme.name);
             
-            if (correctCaptions.error) {
-                return {error: correctCaptions.error};
-            }
-
-            const otherCaptions = await getNotAssociatedCaptions(meme);
-
-            if (otherCaptions.error) {
-                return {error: otherCaptions.error};
-            }
-
-            const gameRound = new MemeRound(meme, correctCaptions, otherCaptions);
-
-            gameRounds.push(gameRound);
-        } catch (error) {
-            console.log(error);
+        if (correctCaptions.error) {
+            return correctCaptions;
         }
+
+        const otherCaptions = await getNotAssociatedCaptions(meme.name);
+
+        if (otherCaptions.error) {
+            return otherCaptions;
+        }
+
+        const gameRound = new MemeRound(meme.memeId, meme.name, correctCaptions, otherCaptions);
+
+        gameRounds.push(gameRound);
     };
 
     return gameRounds;
@@ -51,17 +41,23 @@ async function getMatchMemes() {
 // Get a single meme and the requested caption
 async function getSingleRoundMeme() {
     const numberOfMemes = 1;
+
     const meme = (await getRandomMemes(numberOfMemes))[0];
-    const correctCaptions = await getCorrectCaptions(meme);
-    if (correctCaptions.error) {
-        return {error: correctCaptions.error};
+    if (meme.error) {
+        return meme;
     }
-    const otherCaptions = await getNotAssociatedCaptions(meme);
+
+    const correctCaptions = await getCorrectCaptions(meme.name);
+    if (correctCaptions.error) {
+        return correctCaptions;
+    }
+
+    const otherCaptions = await getNotAssociatedCaptions(meme.name);
     if (otherCaptions.error) {
-        return {error: otherCaptions.error};
+        return otherCaptions;
     } 
 
-    const gameRound = new MemeRound(meme, correctCaptions, otherCaptions);
+    const gameRound = new MemeRound(meme.memeId, meme.name, correctCaptions, otherCaptions);
 
     return gameRound;
 }
@@ -70,44 +66,14 @@ async function getSingleRoundMeme() {
 
 // Insert a new match
 async function registerMatch(user, rounds) {
-    console.log(user);
-    console.log(rounds);
-    const userId = await getUserId(user.username);
-
-    if (userId.error) {
-        return userId;
-    }
-
-    let memeIds = [];
-    let captionIds = [];
+    const matchId = await addMatch(user.userId);
     for (let round of rounds) {
-        const memeId = await getMemeId(round.meme);
-        console.log(memeId);
-
-        if (memeId.error) {
-            return memeId;
-        }
-
-        let captionId = null;
-        if (round.caption) {
-            captionId = await getCaptionId(round.caption);
-            if (captionId.error) {
-                return captionId;
-            }
-        }
-
-        if (captionId === null && round.guessed) {
-            return;
-        }
-
-        memeIds.push(memeId);
-        captionIds.push(captionId);
-    }
-
-    const matchId = await addMatch(userId);
-
-    for (let i = 0; i < 3; i++) {
-        const result = await addRound(matchId, i+1, rounds[i].guessed, memeIds[i], captionIds[i]);
+        const result = await addRound(
+            matchId,
+            round.roundId,
+            round.guessed,
+            round.memeId
+        );
 
         if (!result) {
             return;
@@ -117,4 +83,32 @@ async function registerMatch(user, rounds) {
     return true;
 }
 
-export {getUser, getUserInfo, getMatchMemes, getSingleRoundMeme, registerMatch}
+// Retrieves data of matches of a given user
+async function getUserMatchesHistory(user) {
+    const matchesData = await getUserMatches(user.userId);
+
+    let matchesHistory = [];
+    for (let matchData of matchesData) {
+        console.log(matchData);
+        const rounds = await getRoundsOfMatch(matchData.matchId);
+
+        if (rounds.error) {
+            return rounds;
+        }
+
+        const newMatch = new Match(
+            matchData.matchId,
+            matchData.date,
+            rounds
+        );
+
+        console.log(newMatch);
+
+        matchesHistory.push(newMatch);
+    }
+
+    return matchesHistory;
+}
+
+
+export {getUser, getMatchMemes, getSingleRoundMeme, registerMatch, getUserMatchesHistory}

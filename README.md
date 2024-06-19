@@ -36,10 +36,9 @@ Response code:
 
 Response body content:
 ```
-{
-	"username": "user1",
-	"name": "Mario",
-	"surname": "Rossi"
+{	
+	"userId": 1
+	"username": "user1"
 }
 ```
 
@@ -51,7 +50,7 @@ URL: `/memegame/sessions/current`
 
 HTTP method: GET
 
-Descrizione: recupera informazioni sull'utente autenticato
+Descrizione: recupera informazioni sull'utente autenticato dalla sessione
 
 Request parameters: None
 
@@ -65,9 +64,8 @@ Response code:
 Response body content:
 ```
 {
-	"username": "user1",
-	"name": "Mario",
-	"surname": "Rossi"
+	"userId": 1
+	"username": "user1"
 }
 ```
 
@@ -117,21 +115,26 @@ Response code:
 Response body content:
 ```
 [
-	{
+	{	
+		"memeId": 2,
 		"name": "meme2.png",
 		"correctCaptions": [
-			"Lorem ipsum",
-			...
+			{
+				"captionId": 4,
+				"text": "Lorem ipsum"
+			}
 		],
 		"otherCaptions": [
 			...
 		]
 	},
-	{
+	{	
+		"memeId": 4,
 		"name": "meme4.png",
 		...
 	},
 	{
+		"memeId": 7,
 		"name": "meme7.png",
 		...
 	}
@@ -160,13 +163,16 @@ Response code:
 Response body content:
 ```
 {
+	"memeId": 6,
 	"name": "meme6.png",
 	"correctCaptions": [
-		"Lorem ipsum",
+		{
+			"captionId": 4,
+			"text": "Lorem ipsum"
+		},
 		...
 	],
 	"otherCaptions": [
-		"Lorem ipsum dolor sit amet"
 		...
 	]
 }
@@ -277,20 +283,25 @@ Response body content:
 ```
 [
 	{	
+		"matchId": 1,
 		"date": "2024-05-23",
 		"points": 10,
 		"rounds": [
 			{
+				"roundId": 1,
 				"meme": "meme2.png",
-				"points": 5,
-				"caption": "caption3"
+				"points": 5
+			},
+			{	
+				"roundId": 2,
+				"meme": "meme5.png",
+				"points": 5
 			},
 			{
+				"roundId": 3,
 				"meme": "meme5.png",
-				"points": 5,
-				"caption": "caption12"
-			},
-			...
+				"points": 0
+			}
 		]
 	},
 	...
@@ -313,19 +324,22 @@ Request body content:
 ```
 [
 	{	
-		"meme": "meme2.png",
-		"guessed": true,
-		"caption": "Lorem ipsum"
+		"roundId": 1,
+		"memeId": 2,
+		"name": "meme2.png",
+		"guessed": true
 	},
 	{
-		"meme": "meme5.png",
-		"guessed": false,
-		"caption": ""
+		"roundId": 2,
+		"memeId": 5,
+		"name": "meme5.png",
+		"guessed": false
 	},
 	{
-		"meme": "meme8.png",
-		"guessed": false,
-		"caption": "Dolor sit amet"
+		"roundId": 3,
+		"memeId": 8,
+		"name": "meme8.png",
+		"guessed": false
 	}
 ]
 ```

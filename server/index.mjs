@@ -1,6 +1,6 @@
 // imports
 import express, { json } from 'express';
-import { getMatchMemes, getSingleRoundMeme, getUser, registerMatch } from "./src/controller.mjs";
+import { getMatchMemes, getSingleRoundMeme, getUser, getUserMatchesHistory, registerMatch } from "./src/controller.mjs";
 import morgan from 'morgan';
 import cors from "cors"
 import passport from 'passport';
@@ -8,27 +8,34 @@ import LocalStrategy from 'passport-local'
 import session from 'express-session';
 import { body, validationResult } from 'express-validator';
 
-const baseURL = "/memegame"
 
-// init express
+
+// Init application
+const baseURL = "/memegame"
 const app = new express();
 const port = 3001;
-
-// Middleware
-app.use(json());
-app.use(morgan("dev"));
 const corsOptions = {
     origin: 'http://localhost:5173',
     optionsSuccessStatus: 200,
     credentials: true
-  };
+};
+
+// Middlewares
+app.use(json());
+
+app.use(morgan("dev"));
+
 app.use(cors(corsOptions));
+
 app.use(session({
     secret: "memegame20240627",
     resave: false,
     saveUninitialized: false,
 }));
+
 app.use(passport.authenticate('session'));
+
+app.use(express.static("meme"))
 
 // Local strategy to use user+password authentication
 passport.use(new LocalStrategy(async function verify(username, password, cb) {
@@ -66,8 +73,6 @@ const validateRequest = (req, res, next) => {
 	return next();
 }
 
-// Authentication routes
-
 // Login
 app.post(`${baseURL}/sessions/`, function(req, res, next) {
     passport.authenticate('local', (err, user, info) => {
@@ -90,7 +95,7 @@ app.post(`${baseURL}/sessions/`, function(req, res, next) {
     })(req, res, next);
 });
 
-// Get user info: modificare
+// Get user info
 app.get(
 	`${baseURL}/sessions/current`,
 	isLoggedIn,
@@ -105,9 +110,6 @@ app.delete(
         res.end();
     })
 );
-
-
-// Meme routes
 
 // Get three memes for a match, with captions
 app.get(
@@ -141,13 +143,14 @@ app.get(
         .catch(err => res.status(500).json(err))
 );
 
-// Match registration routes
-
-// New match
+// Add new match to database
 app.post(
 	`${baseURL}/matches`,
 	isLoggedIn,
 	body().isArray().isLength(3),
+    body("*.roundId").isInt({min: 1, max: 3}),
+    body("*.memeId").isInt({min: 1}),
+    body("*.name").isLength({min: 1}),
 	body("*.guessed").isBoolean(),
 	validateRequest,
 	(req, res) => registerMatch(req.user, req.body)
@@ -159,8 +162,24 @@ app.post(
 				res.status(200).end();
 			}
 		})
-		.catch(err => {console.log(err); res.status(500).json(err)})
+		.catch(err => res.status(500).json(err))
 );
+
+// Get matches history
+app.get(
+    `${baseURL}/matches/history`,
+    isLoggedIn,
+    (req, res) => getUserMatchesHistory(req.user)
+        .then(result => {
+            if (result.error) {
+                res.status(404).json(result);
+            }
+            else {
+                res.status(200).json(result);
+            }
+        })
+        .catch(err => res.status(500).json(err))
+)
 
 
 // activate the server

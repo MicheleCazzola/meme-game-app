@@ -25,18 +25,24 @@ Content-Type: application/json
 
 [
 	{	
-		"meme": "meme2.png",
-		"guessed": true,
-		"caption": "caption2C1"
+		"roundId": 1,
+		"memeId": 2,
+		"name": "meme2.png",
+		"guessed": false
 	},
 	{
-		"meme": "meme1.png",
-		"guessed": false,
-        "caption": ""
+		"roundId": 2,
+		"memeId": 4,
+		"name": "meme4.png",
+		"guessed": false
 	},
 	{
-		"meme": "meme4.png",
-		"guessed": false,
-		"caption": "captionX3"
+		"roundId": 3,
+		"memeId": 3,
+		"name": "meme3.png",
+		"guessed": false
 	}
 ]
+
+###
+GET http://localhost:3001/memegame/matches/history
