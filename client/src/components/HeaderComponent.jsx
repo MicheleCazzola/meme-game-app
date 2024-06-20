@@ -1,5 +1,7 @@
-import {Button, Col, Form, InputGroup, Navbar, Row} from "react-bootstrap";
+import {Button, Col, Navbar, Row} from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
+import "./HomeComponent.css"
+import API from "../API.mjs";
 
 function HeaderComponent(props) {
     const navigate = useNavigate();
@@ -8,7 +10,7 @@ function HeaderComponent(props) {
         API.logOut()
             .then(() => {
                 props.setIsLoggedIn(false);
-                navigate("/login");
+                navigate("/");
             })
             .catch(err => console.log(err));
     }
@@ -19,9 +21,9 @@ function HeaderComponent(props) {
 
     return(
         <Navbar className="bg-primary navbar-dark" fixed="top">
-            <Row className="w-100 px-2 py-1">
-                <Col className="col-6 col-md-4 d-flex">
-                    <Link to="/">
+            <Row className="w-100 px-2 py-1 align-content-center">
+                <Col className="col-6 d-flex">
+                    <Link to="/" id="home">
                         <Navbar.Brand className="mx-1">
                             <i className="bi bi-emoji-grin"></i> What do you meme?
                         </Navbar.Brand>
@@ -30,7 +32,7 @@ function HeaderComponent(props) {
                 {
                     props.isLoggedIn && 
                     <>
-                        <Col className="col-3 col-md-8 d-flex justify-content-end">
+                        <Col className="col-6 d-flex justify-content-end">
                             <Button onClick={() => handleHistory()}>
                                 My past games
                             </Button>
@@ -40,10 +42,9 @@ function HeaderComponent(props) {
                         </Col>
                     </>
                 }
-                
             </Row>
         </Navbar>
     );
 }
 
-export {HeaderComponent};
+export default HeaderComponent;
