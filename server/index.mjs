@@ -1,12 +1,12 @@
 // imports
-import express, { json } from 'express';
-import { getMatchMemes, getSingleRoundMeme, getUser, getUserMatchesHistory, registerMatch } from "./src/controller.mjs";
+import express, { json, request } from 'express';
+import { getMatchMemes, getSingleRoundMeme, getUser, getUserMatchesHistory, registerMatch, getAllAssociatedCaptions } from "./src/controller.mjs";
 import morgan from 'morgan';
 import cors from "cors"
 import passport from 'passport';
 import LocalStrategy from 'passport-local'
 import session from 'express-session';
-import { body, validationResult } from 'express-validator';
+import { body, param, validationResult } from 'express-validator';
 
 
 
@@ -67,7 +67,6 @@ const isLoggedIn = (req, res, next) => {
 const validateRequest = (req, res, next) => {
 	const errors = validationResult(req)
 	if (!errors.isEmpty()) {
-		console.log(errors);
 		return res.status(422).json({ error: "Error in parameter formatting" });
 	}
 	return next();
@@ -111,13 +110,12 @@ app.delete(
     })
 );
 
-// Get three memes for a match, with captions
+// Get three memes for a match, with their captions
 app.get(
     `${baseURL}/memes/match`,
 	isLoggedIn,
     (req, res) => getMatchMemes()
         .then(result => {
-            console.log(result);
             if (result.error) {
                 res.status(404).json(result);
             }
@@ -128,10 +126,27 @@ app.get(
         .catch(err => res.status(500).json(err))
 );
 
-// Get meme for a single round match, with captions
+// Get meme for a single round match, with its captions
 app.get(
     `${baseURL}/memes/single`,
     (req, res) => getSingleRoundMeme()
+        .then(result => {
+            if (result.error) {
+                res.status(404).json(result);
+            }
+            else {
+                res.status(200).json(result);
+            }
+        })
+        .catch(err => res.status(500).json(err))
+);
+
+// Get all captions for a given meme
+app.get(
+    `${baseURL}/memes/:id/captions`,
+    param("id").isInt({min: 1}),
+    validateRequest,
+    (req, res) => getAllAssociatedCaptions(req.params.id)
         .then(result => {
             if (result.error) {
                 res.status(404).json(result);

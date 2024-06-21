@@ -1,10 +1,4 @@
 ###
-GET http://localhost:3001/memegame/memes/single
-
-###
-GET http://localhost:3001/memegame/memes/match
-
-###
 POST http://localhost:3001/memegame/sessions
 Content-Type: application/json
 
@@ -18,6 +12,15 @@ GET http://localhost:3001/memegame/sessions/current
 
 ###
 DELETE http://localhost:3001/memegame/sessions/current
+
+###
+GET http://localhost:3001/memegame/memes/single
+
+###
+GET http://localhost:3001/memegame/memes/match
+
+###
+GET http://localhost:3001/memegame/memes/12/captions
 
 ###
 POST http://localhost:3001/memegame/matches
@@ -40,7 +43,7 @@ Content-Type: application/json
 		"roundId": 3,
 		"memeId": 3,
 		"name": "meme3.png",
-		"guessed": false
+		"guessed": true
 	}
 ]
 

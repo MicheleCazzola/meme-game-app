@@ -16,11 +16,10 @@ function Match(matchId, date, rounds) {
 }
 
 // Get meme for a round
-function MemeRound(memeId, name, correctCaptions, otherCaptions) {
+function MemeRound(memeId, name,captions) {
     this.memeId = memeId;
     this.name = name;
-    this.correctCaptions = correctCaptions; 
-    this.otherCaptions = otherCaptions;
+    this.captions = captions;
 }
 
 // Get user info

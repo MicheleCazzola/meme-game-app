@@ -118,13 +118,11 @@ Response body content:
 	{	
 		"memeId": 2,
 		"name": "meme2.png",
-		"correctCaptions": [
+		"captions": [
 			{
 				"captionId": 4,
 				"text": "Lorem ipsum"
-			}
-		],
-		"otherCaptions": [
+			},
 			...
 		]
 	},
@@ -165,14 +163,11 @@ Response body content:
 {
 	"memeId": 6,
 	"name": "meme6.png",
-	"correctCaptions": [
+	"captions": [
 		{
 			"captionId": 4,
 			"text": "Lorem ipsum"
 		},
-		...
-	],
-	"otherCaptions": [
 		...
 	]
 }
@@ -180,42 +175,43 @@ Response body content:
 
 Vincoli di accesso: nessun vincolo
 
-### Captions (non usato al momento)
+### Captions
 
-__Get due didascalie associate ad un meme__
+__Get all captions associated with a specific meme__
 
 URL `/memegame/memes/:id/captions`
 
 HTTP method: GET
 
-Descrizione: recupera dal database due tra le didascalie associate al meme con id specificato
+Descrizione: retrieves all captions associated with the specified meme
 
-Request parameters: `id` - id del meme di cui recuperare le due didascalie associate
+Request parameters: `id` - id of the meme to retrieve the associated captions for
 
 Request body content: None
 
 Response code:
 - `200 OK`
-- `404 Not found`: non ci sono almeno due didascalie per il meme specificato, oppure il meme non esiste
-- `500 Internal server error`: errore generico
+- `404 Not found`: there are not two captions associated with the specified meme
+- `500 Internal server error`: generic error
 
 Response body content:
 ```
 [
 	{
-		"id": 1,
+		"captionId": 1,
 		"text": "Lorem ipsum"
 	},
 	{
-		"id": 3,
+		"captionId": 3,
 		"text": "Dolor sit amet"
-	}
+	},
+	...
 ]
 ```
 
-Vincoli di accesso: nessun vincolo
+Access constraints: None
 
-__Get cinque didascalie non associate ad un meme__
+__Get cinque didascalie non associate ad un meme__ (not used)
 
 URL `/memegame/memes/not/:id/captions`
 

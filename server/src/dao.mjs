@@ -103,23 +103,24 @@ async function getRandomMemes(number) {
     });
 }
 
-// Retrieves two correct captions for the specified meme
-async function getCorrectCaptions(memeName) {
-    const correctCaptions = 2;
+// Retrieves captions associated for the specified meme 
+async function getCorrectCaptions(memeId, numCaptions) {
+	const minCaptions = 2;
+	const limitClause = numCaptions ? `LIMIT ${numCaptions}` : "";
     const query =
         `   SELECT C.CaptionId as CaptionId, Text 
             FROM CAPTION AS C, CORRECT_CAPTION AS CC, MEME AS M
-            WHERE C.CaptionId = CC.CaptionId AND CC.MemeId = M.MemeId AND M.Name = ?
+            WHERE C.CaptionId = CC.CaptionId AND CC.MemeId = M.MemeId AND M.MemeId = ?
             ORDER BY RANDOM()
-            LIMIT ${correctCaptions}
+			${limitClause}
         `;
     return new Promise((resolve, reject) => {
-        db.all(query, [memeName], (err, rows) => {
+        db.all(query, [memeId], (err, rows) => {
             if (err) {
                 reject(err);
             }
-            else if (rows.length < correctCaptions) {
-                resolve({error: `Two associated captions not found for meme '${memeName}'`});
+            else if (rows.length < minCaptions) {
+                resolve({error: `${numCaptions} associated captions not found for meme '${memeId}'`});
             }
             else {
                 const captions = rows.map(row => {
@@ -135,26 +136,26 @@ async function getCorrectCaptions(memeName) {
 }
 
 // Retrieves five captions that are not associated to the specified meme
-async function getNotAssociatedCaptions(memeName) {
-    const notAssociatedCaptions = 5;
+async function getNotAssociatedCaptions(memeId) {
+    const numCaptions = 5;
     const query = 
         `   SELECT C.CaptionId as CaptionId, Text
             FROM CAPTION AS C  
             WHERE C.CaptionId NOT IN (
                 SELECT CC.CaptionId
                 FROM CORRECT_CAPTION AS CC, MEME AS M
-                WHERE M.MemeId = CC.MemeId AND M.Name = ?
+                WHERE M.MemeId = CC.MemeId AND M.MemeId = ?
             )
             ORDER BY RANDOM()
-            LIMIT ${notAssociatedCaptions}
+            LIMIT ${numCaptions}
         `;
     return new Promise((resolve, reject) => {
-        db.all(query, [memeName], (err, rows) => {
+        db.all(query, [memeId], (err, rows) => {
             if (err) {
                 reject(err);
             }
-            else if (rows.length < notAssociatedCaptions) {
-                resolve({error: `Five non associated captions not found for meme '${memeName}'`});
+            else if (rows.length < numCaptions) {
+                resolve({error: `${numCaptions} not associated captions not found for meme '${memeName}'`});
             }
             else {
                 const captions = rows.map(row => {
