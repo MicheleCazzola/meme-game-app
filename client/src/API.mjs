@@ -2,6 +2,7 @@ import { Round, Match, MemeRound, User } from "./models.mjs";
 
 const SERVER_URL = "http://localhost:3001"
 const BASE_URL = "/memegame"
+const MEMES_URL = "/meme"
 
 const logIn = async (credentials) => {
     const response = await fetch(`${SERVER_URL}${BASE_URL}/sessions`, {
@@ -58,5 +59,13 @@ const getCorrectCaptions = async (memeId) => {
     throw errDetails;
 }
 
-const API = {logIn, logOut, getGameData, getCorrectCaptions};
+const getImage = async (imageName) => {
+    const res = await fetch(`${MEMES_URL}/${imageName}`);
+    const imageBlob = await res.blob();
+    const imageObjectURL = URL.createObjectURL(imageBlob);
+    //console.log(imageObjectURL);
+    return imageObjectURL;
+};
+
+const API = {logIn, logOut, getGameData, getCorrectCaptions, getImage};
 export default API;

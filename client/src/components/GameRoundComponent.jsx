@@ -1,47 +1,80 @@
 import { useEffect, useState } from "react";
-import { Alert, Button, Card, Col, Container, Row } from "react-bootstrap";
+import { Alert, Button, Card, Col, Container, Image, Row } from "react-bootstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import API from "../API.mjs";
 import "./GameRoundComponent.css"
 
 function GameRoundComponent(props) {
-
+    const TIME_PER_ROUND = 10;
     const navigate = useNavigate();
     const {roundId} = useParams();
     const [rounds, setRounds] = useState(undefined);
+    const [image, setImage] = useState(undefined);
+    //const [currentRound, setCurrentRound] = useState(undefined);
     const [selected, setSelected] = useState(undefined);
     const [mode, setMode] = useState("waiting");    // waiting, playing, result
-    const [result, setResult] = useState([false, false, false]);
+    const [result, setResult] = useState([undefined, undefined, undefined]);
     const [choices, setChoices] = useState([undefined, undefined, undefined]);
     const [captionsToShow, setCaptionsToShow] = useState(undefined);
-
+    const [missingTime, setMissingTime] = useState(undefined);
+    
     let currentRound = rounds && rounds[parseInt(roundId)-1];
 
     let ignore;
     useEffect(() => {
-        console.log(`Ignore: ${ignore}`);
+        //console.log(`Ignore: ${ignore}`);
         if (!ignore) {
             ignore = true;
+            props.setGame(true);
             API.getGameData(props.isLoggedIn)
                 .then(gameData => {
                     setRounds(gameData);
-                    setMode("playing");
-                    console.log("inside");
+                    
                 })
                 .catch(err => console.log(err));
         }
     }, []);
 
+    ignore = false;
+    useEffect(() => {
+        if(!ignore) {
+            ignore = true;
+            API.getImage(currentRound.name)
+            .then(result => {
+                setImage(result);
+                setMode("playing");
+                setMissingTime(TIME_PER_ROUND);
+            })
+            .catch(err => console.log(err));
+        }
+    }, [currentRound]);
+    
+    useEffect(() => {
+        let t;
+        if(mode === "playing" && missingTime > 0) {
+            t = setTimeout(() => {
+                const endOfRound = missingTime === 1;
+                setMissingTime(curr => curr-1);
+                if(endOfRound){
+                    handleConfirm();
+                }
+            }, 1000);
+        }
+            
+        return () => clearTimeout(t);
+    },[missingTime]);
+
     const handleConfirm = () => {
+        setMode("waiting");
         API.getCorrectCaptions(currentRound.memeId)
             .then(captions => {
                 setMode("result");
-                const correctCaptions = captions.map(captionObj => captionObj.captionId)
-                    .filter(captionId => currentRound.captions.map(currCaption => currCaption.captionId).includes(captionId));
-                const guessed = correctCaptions.includes(selected);
+                const correctCaptions = captions
+                    .map(captionObj => captionObj.captionId)
+                    .filter(captionId => currentRound.captions
+                        .map(currCaption => currCaption.captionId).includes(captionId));
+                const guessed = selected !== undefined ? correctCaptions.includes(selected) : undefined;
                 setCaptionsToShow(!guessed && correctCaptions);
-                //console.log(roundId);
-                console.log(captions, currentRound.captions, correctCaptions);
                 setChoices(curr => {
                     return curr.map((elem, index) => {
                         console.log(index, roundId-1, elem, selected);
@@ -59,7 +92,6 @@ function GameRoundComponent(props) {
                         return elem;
                     })
                 });
-                console.log(choices, result);
             })
             .catch(err => console.log(err));
     } 
@@ -70,34 +102,76 @@ function GameRoundComponent(props) {
         }
     }
 
+    const handleNextRound = (currentRoundId) => {
+        setSelected(undefined);
+        setImage(undefined);
+        setMode("waiting");
+        //setMissingTime(TIME_PER_ROUND);
+        navigate("/game/" + (parseInt(currentRoundId) + 1))
+    }
+
+    const handleViewSummary = () => {
+        // register
+        props.setGame(false);
+        navigate("/game-summary")
+    }
+
     const handleLeave = () => {
 
     }
 
     return (
-        <Row className="min-vh-100 main justify-content-center align-items-center">
-            <Col lg={4}>
-                <Container fluid className="justify-content-center">
-                    <Row className="align-items-center">
-                        <Col lg={4}>
-                            {currentRound && <MemeImg meme={currentRound.name} />}
-                        </Col>
-                    </Row>
-                </Container>
-            </Col>
-            <Col lg={8}>
-                <Container fluid> 
-                    {   
-                        currentRound && <Captions captions={currentRound.captions} handleConfirm={handleConfirm}
-                            selected={selected} handleSelect={handleSelect} mode={mode} nextRound={props.isLoggedIn && roundId < 2 ? parseInt(roundId)+1 : undefined}
-                            next={props.isLoggedIn ? roundId == 2 ? "gameResults" : "nextRound" : "newGame"} correctCaptions={captionsToShow}
-                            handleLeave={handleLeave} />
-                    }
-                    {
-                        mode === "result" && 
-                        <Alert>{result[roundId-1] === true ? "You guessed! +5 points" : "You did not guess! 0 points gained"}</Alert>
-                    }
-                </Container>
+        <Row className="min-vh-100 main justify-content-center align-items-end">
+            <Col lg={12}>
+            <Container fluid>
+                <Row>
+                    <Col lg={4}>
+                        <Container fluid className="d-flex justify-content-center align-items-center" style={{height: "5rem"}}>
+                            <Row>
+                                <Col lg={4}>
+                                    {missingTime}
+                                </Col>
+                            </Row>
+                        </Container>
+                    </Col>
+                    <Col lg={8}>
+                        <Container fluid className="h-100">
+                            <Row className="align-items-center h-100">
+                                <Col lg={12}>
+                                    {
+                                        mode === "result" && 
+                                        <Alert className="mb-0">{result[roundId-1] === true ? "You guessed! +5 points" :
+                                            result[roundId-1] === false ? "You did not guess! 0 points gained" : "Time expired! 0 points gained"}</Alert>
+                                    }
+                                </Col>
+                            </Row>
+                        </Container>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col lg={4}>
+                        <Container fluid className="d-flex justify-content-center align-items-center" style={{height: "31rem"}}>
+                            <Row>
+                                <Col lg={4}>
+                                {image}
+                                    {currentRound && <MemeImg meme={rounds && rounds.map(r => r.name)} />}
+                                    {image && <img src={image} />}
+                                </Col>
+                            </Row>
+                        </Container>
+                    </Col>
+                    <Col lg={8}>
+                        <Container fluid> 
+                            {   
+                                currentRound && <Captions captions={currentRound.captions} handleConfirm={handleConfirm}
+                                    selected={selected} handleSelect={handleSelect} mode={mode} roundId={roundId} handleViewSummary={handleViewSummary}
+                                    next={props.isLoggedIn ? roundId == 3 ? "gameResults" : "nextRound" : "newGame"} correctCaptions={captionsToShow} handleNextRound={handleNextRound}
+                                    handleLeave={handleLeave} />
+                            }
+                        </Container>
+                    </Col>
+                </Row>
+            </Container>
             </Col>
         </Row>
     );
@@ -165,20 +239,16 @@ function Captions(props) {
                             </Link>
                     }
                     {
-                        props.mode === "result" && props.next === "nextRound" && 
-                            <Link to={`/game/${props.nextRound}`}>
-                                <Button variant="primary">
-                                    Next round
-                                </Button>
-                            </Link>
+                        props.mode === "result" && props.next === "nextRound" &&
+                            <Button variant="primary" onClick={() => props.handleNextRound(props.roundId)}>
+                                Next round
+                            </Button>
                     }
                     {
-                        props.mode === "result" && props.next === "globalResults" && 
-                            <Link to={"/game-summary"}>
-                                <Button variant="primary">
-                                    Go to summary
-                                </Button>
-                            </Link>
+                        props.mode === "result" && props.next === "gameResults" && 
+                            <Button variant="primary" onClick={() => props.handleViewSummary()}>
+                                Go to summary
+                            </Button>
                     }
                 </Col>
                 <Col lg={6} className="d-flex justify-content-end">

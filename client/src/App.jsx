@@ -14,13 +14,14 @@ import NotFoundComponent from './components/NotFoundComponent';
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [game, setGame] = useState(false);
 
     return(
         <>
             <Routes>
                 <Route path="/" element={
                     <>
-                        <HeaderComponent isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+                        <HeaderComponent isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} game={game} />
                             <Container fluid>
                                 
                                     <Outlet />
@@ -34,7 +35,7 @@ function App() {
                         <LoginComponent setIsLoggedIn={setIsLoggedIn} />
                     } />
                     <Route path="/game/:roundId" element={
-                        <GameRoundComponent isLoggedIn={isLoggedIn} />
+                        <GameRoundComponent isLoggedIn={isLoggedIn} game={game} setGame={setGame} />
                     } />
                     <Route path="/round-summary/:roundId" element={
                         <RoundSummaryComponent />
@@ -42,9 +43,9 @@ function App() {
                     <Route path="/game-summary" element={
                         <GameSummaryComponent />
                     } />
-                    <Route path="*" element={ 
+                    {/*<Route path="*" element={ 
                         <NotFoundComponent /> 
-                    } />
+                    } />*/}
 
                 </Route>
             </Routes>

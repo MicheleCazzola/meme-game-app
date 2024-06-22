@@ -30,7 +30,7 @@ function HeaderComponent(props) {
                     </Link>
                 </Col>
                 {
-                    props.isLoggedIn && 
+                    props.isLoggedIn && !props.game &&
                     <>
                         <Col className="col-6 d-flex justify-content-end">
                             <Button onClick={() => handleHistory()}>
