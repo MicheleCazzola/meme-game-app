@@ -81,7 +81,7 @@ async function getSingleRoundMeme() {
 
     const gameRound = new MemeRound(meme.memeId, meme.name, captions);
 
-    return gameRound;
+    return [gameRound];
 }
 
 // Captions

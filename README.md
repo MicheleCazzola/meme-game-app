@@ -160,17 +160,19 @@ Response code:
 
 Response body content:
 ```
-{
-	"memeId": 6,
-	"name": "meme6.png",
-	"captions": [
-		{
-			"captionId": 4,
-			"text": "Lorem ipsum"
-		},
-		...
-	]
-}
+[
+	{
+		"memeId": 6,
+		"name": "meme6.png",
+		"captions": [
+			{
+				"captionId": 4,
+				"text": "Lorem ipsum"
+			},
+			...
+		]
+	}
+]
 ```
 
 Vincoli di accesso: nessun vincolo
