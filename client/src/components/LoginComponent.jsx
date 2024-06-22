@@ -29,38 +29,37 @@ function LoginComponent(props) {
     }
 
     return (
-        <Col lg={4}>
-            <Row as={"h3"} className="mx-0">Log in to your account</Row>
-            <Form onSubmit={() => handleLogin()} className="mx-0 my-2">
-                <Form.Group className='mb-3'>
-                    <Form.Label>Username</Form.Label>
-                    <Form.Control
-                        required
-                        type="text"
-                        value={username}
-                        onChange={(event) => { setUsername(event.target.value);}}>
-                    </Form.Control>
-                </Form.Group>
-                <Form.Group className='mb-3'>
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control
-                        required
-                        type="password"
-                        value={password}
-                        onChange={(event) => { setPassword(event.target.value);}}>
-                    </Form.Control>
-                </Form.Group>
-                <Container className="d-flex px-0">
-                    <Button variant='success' type='Submit'>Login</Button>
-                    <Button variant='danger' className="mx-1" onClick={() => reset()}>Reset</Button>
-                </Container> 
-                
-                
-                {loginFailed && <Alert variant="danger" className="my-1">Incorrect username and/or password</Alert>}
-            </Form>
-            <Container className="d-flex justify-content-end px-0"><Link to="/">Go back</Link></Container>
-            
-        </Col>
+        <Row className="min-vh-100 main align-items-center justify-content-center">
+            <Col lg={4}>
+                <Row as={"h3"} className="mx-0">Log in to your account</Row>
+                <Form onSubmit={() => handleLogin()} className="mx-0 my-2">
+                    <Form.Group className='mb-3'>
+                        <Form.Label>Username</Form.Label>
+                        <Form.Control
+                            required
+                            type="text"
+                            value={username}
+                            onChange={(event) => { setUsername(event.target.value);}}>
+                        </Form.Control>
+                    </Form.Group>
+                    <Form.Group className='mb-3'>
+                        <Form.Label>Password</Form.Label>
+                        <Form.Control
+                            required
+                            type="password"
+                            value={password}
+                            onChange={(event) => { setPassword(event.target.value);}}>
+                        </Form.Control>
+                    </Form.Group>
+                    <Container className="d-flex px-0">
+                        <Button variant='success' type='Submit'>Login</Button>
+                        <Button variant='danger' className="mx-1" onClick={() => reset()}>Reset</Button>
+                    </Container> 
+                    {loginFailed && <Alert variant="danger" className="my-1">Incorrect username and/or password</Alert>}
+                </Form>
+                <Container className="d-flex justify-content-end px-0"><Link to="/">Go back</Link></Container>        
+            </Col>
+        </Row>
     )
 }
 

@@ -12,32 +12,34 @@ function HomeComponent(props) {
     }
 
     return (
-        <Col lg={4} className='justify-content-center'>
-            <Container fluid>
-                <Row as={"h2"} className='justify-content-center'>
-                    <Col lg={8} className='mx-0'>What do you meme?</Col>
-                </Row>
-                <Row className='justify-content-center'>
-                    {
-                        !props.isLoggedIn && 
-                        <Col lg={6} className='px-0'>
-                            <Container className='d-flex justify-content-between'>
-                                <Button variant="primary" className='mx-1' onClick={() => handlePlay()}>Play as guest</Button>
-                                <Link to="/login"><Button variant="primary" className='mx-0'>Login</Button></Link>
-                            </Container>
-                        </Col>
-                    }
-                    {
-                        props.isLoggedIn &&
-                        <Col lg={3} className='px-0'>
-                            <Container className='d-flex justify-content-center'>
-                                <Button variant="primary" className='mx-1' onClick={() => handlePlay()}>Play</Button>
-                            </Container>
-                        </Col>
-                    }
-                </Row>
-            </Container>
-        </Col>
+        <Row className="min-vh-100 main align-items-center justify-content-center">
+            <Col lg={4} className='justify-content-center'>
+                <Container fluid>
+                    <Row as={"h2"} className='justify-content-center'>
+                        <Col lg={8} className='mx-0'>What do you meme?</Col>
+                    </Row>
+                    <Row className='justify-content-center'>
+                        {
+                            !props.isLoggedIn && 
+                            <Col lg={6} className='px-0'>
+                                <Container className='d-flex justify-content-between'>
+                                    <Link to="/game/1"><Button variant="primary" className='mx-1'>Play as guest</Button></Link>
+                                    <Link to="/login"><Button variant="primary" className='mx-0'>Login</Button></Link>
+                                </Container>
+                            </Col>
+                        }
+                        {
+                            props.isLoggedIn &&
+                            <Col lg={3} className='px-0'>
+                                <Container className='d-flex justify-content-center'>
+                                    <Link to="/game/1"><Button variant="primary" className='mx-1'>Play</Button></Link>
+                                </Container>
+                            </Col>
+                        }
+                    </Row>
+                </Container>
+            </Col>
+        </Row>
     )
 }
 

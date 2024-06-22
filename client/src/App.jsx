@@ -22,9 +22,8 @@ function App() {
                     <>
                         <HeaderComponent isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
                             <Container fluid>
-                                <Row className="min-vh-100 main align-items-center justify-content-center">
+                                
                                     <Outlet />
-                                </Row>
                         </Container>
                     </>
                 }>
@@ -35,7 +34,7 @@ function App() {
                         <LoginComponent setIsLoggedIn={setIsLoggedIn} />
                     } />
                     <Route path="/game/:roundId" element={
-                        <GameRoundComponent />
+                        <GameRoundComponent isLoggedIn={isLoggedIn} />
                     } />
                     <Route path="/round-summary/:roundId" element={
                         <RoundSummaryComponent />
