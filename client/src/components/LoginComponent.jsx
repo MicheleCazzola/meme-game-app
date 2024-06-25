@@ -1,6 +1,6 @@
 import { Alert, Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useState } from "react";
-import API from "../API.mjs";
+import {API} from "../API.mjs";
 import { Link, useNavigate } from "react-router-dom";
 
 function LoginComponent(props) {

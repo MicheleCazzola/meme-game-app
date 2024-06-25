@@ -23,7 +23,7 @@ function HomeComponent(props) {
                             !props.isLoggedIn && 
                             <Col lg={6} className='px-0'>
                                 <Container className='d-flex justify-content-between'>
-                                    <Link to="/game/1"><Button variant="primary" className='mx-1'>Play as guest</Button></Link>
+                                    <Link to="/game"><Button variant="primary" className='mx-1'>Play as guest</Button></Link>
                                     <Link to="/login"><Button variant="primary" className='mx-0'>Login</Button></Link>
                                 </Container>
                             </Col>
@@ -32,7 +32,7 @@ function HomeComponent(props) {
                             props.isLoggedIn &&
                             <Col lg={3} className='px-0'>
                                 <Container className='d-flex justify-content-center'>
-                                    <Link to="/game/1"><Button variant="primary" className='mx-1'>Play</Button></Link>
+                                    <Link to="/game"><Button variant="primary" className='mx-1'>Play</Button></Link>
                                 </Container>
                             </Col>
                         }

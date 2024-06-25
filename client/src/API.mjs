@@ -49,7 +49,7 @@ const getGameData = async (isLoggedIn) => {
 const getCorrectCaptions = async (memeId) => {
     const response = await fetch(`${SERVER_URL}${BASE_URL}/memes/${memeId}/captions`, {
         method: "GET",
-         credentials: "include"
+        credentials: "include"
     });
     if (response.ok) {
         const captionsJson = await response.json();
@@ -59,13 +59,20 @@ const getCorrectCaptions = async (memeId) => {
     throw errDetails;
 }
 
-const getImage = async (imageName) => {
-    const res = await fetch(`${MEMES_URL}/${imageName}`);
-    const imageBlob = await res.blob();
-    const imageObjectURL = URL.createObjectURL(imageBlob);
-    //console.log(imageObjectURL);
-    return imageObjectURL;
-};
+const saveGameResults = async(gameObj) => {
+    const response = await fetch(`${SERVER_URL}${BASE_URL}/matches`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        credentials: "include",
+        body: JSON.stringify(gameObj)
+    });
 
-const API = {logIn, logOut, getGameData, getCorrectCaptions, getImage};
-export default API;
+    if(response.ok) {
+        return;
+    }
+    const errDetails = await response.json();
+    throw errDetails;
+}
+
+const API = {logIn, logOut, getGameData, getCorrectCaptions, saveGameResults};
+export {API, SERVER_URL};

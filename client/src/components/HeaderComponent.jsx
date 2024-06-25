@@ -1,7 +1,7 @@
 import {Button, Col, Navbar, Row} from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import "./HomeComponent.css"
-import API from "../API.mjs";
+import {API} from "../API.mjs";
 
 function HeaderComponent(props) {
     const navigate = useNavigate();

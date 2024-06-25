@@ -35,7 +35,7 @@ app.use(session({
 
 app.use(passport.authenticate('session'));
 
-app.use(express.static("meme"))
+app.use(express.static("meme"));
 
 // Local strategy to use user+password authentication
 passport.use(new LocalStrategy(async function verify(username, password, cb) {
