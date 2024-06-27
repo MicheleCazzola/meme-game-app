@@ -6,21 +6,18 @@ function Round(roundId, meme, guessed) {
 }
 
 // Get match statistics
-function Match(matchId, date, rounds) {
+function Match(matchId, date, points, rounds) {
     this.matchId = matchId;
     this.date = date;
-    this.points = rounds
-        .map(round => round.points)
-        .reduce((a, b) => a + b);
+    this.points = points;
     this.rounds = rounds;
 }
 
 // Get meme for a round
-function MemeRound(memeId, name, correctCaptions, otherCaptions) {
+function MemeRound(memeId, name, captions) {
     this.memeId = memeId;
     this.name = name;
-    this.correctCaptions = correctCaptions; 
-    this.otherCaptions = otherCaptions;
+    this.captions = captions;
 }
 
 // Get user info

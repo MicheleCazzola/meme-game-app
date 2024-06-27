@@ -4,7 +4,11 @@ import { Link } from "react-router-dom";
 import "./GameSummaryComponent.css"
 
 function GameSummaryComponent(props) {
-    const totalPoints = props.gameResult && 5 * props.gameResult.map(result => result.guessed || 0).reduce((a, b) => a + b);
+    const totalPoints = props.gameResult && 
+        5 * props.gameResult
+            .map(result => result.guessed || 0)
+            .reduce((a, b) => a + b);
+            
     return (
         <Row className="min-vh-100 main justify-content-center">
             <Col lg={10}>
@@ -34,20 +38,11 @@ function GameSummaryComponent(props) {
                             :    
                             <Col lg={12} as={"h2"}>
                                     No results to show
-                                </Col>    
+                            </Col>    
                         }
                     </Row>
                     <Row className="actions align-content-center my-3">
-                        <Col lg={6} className="d-flex">
-                            <Link to="/game">
-                                <Button variant="primary" className="btn-c">New game</Button>
-                            </Link>
-                        </Col>
-                        <Col lg={6} className="d-flex justify-content-end">
-                            <Link to="/">
-                                <Button variant="danger" className="btn-c">Go home</Button>
-                            </Link>
-                        </Col>
+                        <Actions />
                     </Row>
                 </Container>
             </Col>
@@ -83,6 +78,23 @@ function RoundSummaryComponent(props) {
                     </Container>
                 </Col>
             }
+        </>
+    );
+}
+
+function Actions(props) {
+    return (
+        <>
+            <Col lg={6} className="d-flex">
+                <Link to="/game">
+                    <Button variant="primary" className="btn-c">New game</Button>
+                </Link>
+            </Col>
+            <Col lg={6} className="d-flex justify-content-end">
+                <Link to="/">
+                    <Button variant="danger" className="btn-c">Go home</Button>
+                </Link>
+            </Col>
         </>
     );
 }

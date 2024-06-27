@@ -1,17 +1,16 @@
 import { Container, Row } from "react-bootstrap";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
+import "./NotFoundComponent.css"
 
 function NotFoundComponent() {
-    const location = useLocation();
-    const nextPage = location.state ? location.state.nextPage || "/" : "/";
     return (
         <Container fluid>
-            <Row as={"h2"} className="py-5">
+            <Row as={"h2"} className="main">
                 Oops...something went wrong
             </Row>
-            <Row className="d-flex align-content-end" style={{textAlign: "end"}}>
-                <Link to={nextPage}>
-                    Go back to previous page
+            <Row className="d-flex py-3" id="end-link">
+                <Link to="/">
+                    Go home
                 </Link>
             </Row>
         </Container>

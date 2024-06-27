@@ -1,6 +1,6 @@
 import { Alert, Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useState } from "react";
-import {API} from "../API.mjs";
+import { API } from "../API.mjs";
 import { Link, useNavigate } from "react-router-dom";
 
 function LoginComponent(props) {
@@ -10,12 +10,13 @@ function LoginComponent(props) {
     const [password, setPassword] = useState("");
     const [loginFailed, setLoginFailed] = useState(false);
 
-    const handleLogin = () => {
+    const handleLogin = (event) => {
         event.preventDefault();
 
         API.logIn({username, password})
-            .then(() => {
+            .then(result => {
                 props.setIsLoggedIn(true);
+                props.setUser(result);
                 setLoginFailed(false);
                 navigate("/");
             })
@@ -32,7 +33,7 @@ function LoginComponent(props) {
         <Row className="min-vh-100 main align-items-center justify-content-center">
             <Col lg={4}>
                 <Row as={"h3"} className="mx-0">Log in to your account</Row>
-                <Form onSubmit={() => handleLogin()} className="mx-0 my-2">
+                <Form onSubmit={(event) => handleLogin(event)} className="mx-0 my-2">
                     <Form.Group className='mb-3'>
                         <Form.Label>Username</Form.Label>
                         <Form.Control

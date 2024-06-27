@@ -4,20 +4,23 @@
 
 ## React Client Application Routes
 
-- Route `/`: page content and purpose
-- Route `/something/:param`: page content and purpose, param specification
-- ...
+- Route `/`: root route, it wraps all the other routes and it contains header and home components  
+- Route `/login`: login route, it contains the login component and it is reachable through the home page
+- Route `/game`: round game route, it contains the game round component and it is reachable through the home page
+- Route `/game-summary`: gamme summary route, it contains the game summary component and it is reachable through the game round component page, at the end of a 3-round game
+- Route `/history`: games history (user profile) route, it contains the history component and it is always reachable (for a logged in user), except during a game
+- Route `*`: it indicates all the other routes, reachable by typing not valid URLs; it contains the error component 
 
 ## API Server
-### Autenticazione
+### Authentication and session
 
 __Login__
 
-URL: `/memegame/sessions`
+URL: `/api/sessions`
 
 HTTP method: POST
 
-Descrizione: effettua il login
+Descriptions: it performs login
 
 Request parameters: None
 
@@ -30,9 +33,9 @@ Request body content:
 ```
 
 Response code:
-- `201 Created`
-- `401 Unauthorized`: credenziali errate
-- `500 Internal server error`: errore generico
+- `201 Created`: success
+- `401 Unauthorized`: wrong username and/or password 
+- `500 Internal server error`: generic error
 
 Response body content:
 ```
@@ -42,24 +45,24 @@ Response body content:
 }
 ```
 
-Vincoli di accesso: nessun vincolo
+Access constraints: None
 
-__Get user info__
+__Retrieve user information__
 
-URL: `/memegame/sessions/current`
+URL: `/api/sessions/current`
 
 HTTP method: GET
 
-Descrizione: recupera informazioni sull'utente autenticato dalla sessione
+Description: it retrieves information about the authenticated user, if present
 
 Request parameters: None
 
 Request body content: None
 
 Response code:
-- `200 OK`
-- `401 Unauthorized` (utente non autenticato)
-- `500 Internal server error` (errore generico)
+- `200 OK`: success
+- `401 Unauthorized`: no active session (not authenticated user)
+- `500 Internal server error`: generic error
 
 Response body content:
 ```
@@ -69,48 +72,48 @@ Response body content:
 }
 ```
 
-Vincoli di accesso: può essere chiamata solo da un utente autenticato
+Access constraints: it can only be called by a logged in user
 
 __Logout__
 
-URL: `/memegame/sessions/current`
+URL: `/api/sessions/current`
 
 HTTP method: DELETE
 
-Descrizione: effettua il logout
+Descrption: it performs logout
 
 Request parameters: None
 
 Request body content: None
 
 Response code:
-- `200 OK`
-- `401 Unauthorized` (utente non autenticato)
-- `500 Internal server error` (errore generico)
+- `200 OK`: success
+- `401 Unauthorized`: user not authenticated
+- `500 Internal server error`: generic error
 
 Response body content: None
 
-Vincoli di accesso: può essere chiamata solo da un utente autenticato
+Access constraints: it can only be called by a logged in user
 
 ### Meme
 
-__Get collezione di tre meme differenti, con annesse didascalie__
+__Retrieve 3-round game data__
 
-URL: `/memegame/memes/match`
+URL: `/api/memes/match`
 
 HTTP method: GET
 
-Descrizione: recupera tre meme differenti dal database, in modo casuale, per giocare una partita completa; per ognuno di essi, ritorna due didascalie corrette e cinque errate.
+Description: it retrieves three different memes, with random criterion, for a 3-round match; for each of them, it also retrieves seven captions, where exactly two are correct for it. 
 
 Request parameters: None
 
 Request body content: None
 
 Response code:
-- `200 OK`
-- `401 Unauthorized`: utente non autenticato
-- `404 Not found`: meme o didascalie associate non trovati in numero richiesto
-- `500 Internal server error`: errore generico
+- `200 OK`: success
+- `401 Unauthorized`: user not authenticated
+- `404 Not found`: data not found
+- `500 Internal server error`: generic error
 
 Response body content:
 ```
@@ -139,24 +142,24 @@ Response body content:
 ]
 ```
 
-Vincoli di accesso: può essere chiamata solo da un utente autenticato
+Access constraints: it can only be called by a logged in user
 
-__Get singolo meme__
+__Retrieve single-round game data__
 
-URL: `/memegame/memes/single`
+URL: `/api/memes/single`
 
 HTTP method: GET
 
-Descrizione: recupera un meme dal database in modo casuale, insieme a due didascalie corrette e cinque errate.
+Description: it retrieves one meme with random criterion, together with seven captions, where exactly two are correct for it.
 
 Request parameters: None
 
 Response parameters: None
 
 Response code:
-- `200 OK`
-- `404 Not found`: meme o didascalie associate non trovati in numero richiesto
-- `500 Internal server error`: errore generico
+- `200 OK`: success
+- `404 Not found`: data not found
+- `500 Internal server error`: generic error
 
 Response body content:
 ```
@@ -175,25 +178,26 @@ Response body content:
 ]
 ```
 
-Vincoli di accesso: nessun vincolo
+Access constraints: None
 
 ### Captions
 
-__Get all captions associated with a specific meme__
+__Retrieve all captions associated with a specific meme__
 
-URL `/memegame/memes/:id/captions`
+URL `/api/memes/:id/captions`
 
 HTTP method: GET
 
-Descrizione: retrieves all captions associated with the specified meme
+Description: it retrieves all captions associated with the specified meme
 
-Request parameters: `id` - id of the meme to retrieve the associated captions for
+Request parameters:
+- `id` - id of the meme to retrieve the associated captions for
 
 Request body content: None
 
 Response code:
-- `200 OK`
-- `404 Not found`: there are not two captions associated with the specified meme
+- `200 OK`: success
+- `404 Not found`: data not found
 - `500 Internal server error`: generic error
 
 Response body content:
@@ -213,69 +217,24 @@ Response body content:
 
 Access constraints: None
 
-__Get cinque didascalie non associate ad un meme__ (not used)
-
-URL `/memegame/memes/not/:id/captions`
-
-HTTP method: GET
-
-Descrizione: recupera dal database cinque tra le didascalie non associate al meme con id specificato
-
-Request parameters: `id` - id del meme specificato
-
-Request body content: None
-
-Response code:
-- `200 OK`
-- `404 Not found`: non ci sono almeno cinque didascalie non associate con il meme specificato
-- `500 Internal server error`: errore generico
-
-Response body content:
-```
-[
-	{
-		"id": 1,
-		"text": "Lorem ipsum"
-	},
-	{
-		"id": 3,
-		"text": "Dolor sit amet"
-	},
-	{
-		"id": 10,
-		"text": "Lorem ipsum dolor"
-	},
-	{
-		"id": 12,
-		"text": "ipsum dolor sit amet"
-	},
-	{
-		"id": 21,
-		"text": "Lorem ipsum dolor sit amet"
-	}
-]
-```
-
-Vincoli di accesso: nessun vincolo
-
 ### Match
 
-__Get di tutte le partite completate da un utente autenticato__
+__Retrieve all matches completed by a user__
 
-URL: `/memegame/matches/history`
+URL: `/api/matches/history`
 
 HTTP method: GET
 
-Descrizione: recupera tutte le partite dell'utente corrente dal database, insieme alle informazioni sui singoli round
+Description: it retrieves all the matches of the current user, together with the information about their rounds
 
 Request parameters: None
 
 Request body content: None
 
 Response code:
-- `200 OK`
-- `401 Unauthorized`: utente non autenticato
-- `500 Internal server error`: errore generico
+- `200 OK`: success
+- `401 Unauthorized`: user not authenticated
+- `500 Internal server error`: generic error
 
 Response body content:
 ```
@@ -306,15 +265,15 @@ Response body content:
 ]
 ```
 
-Vincoli di accesso: può essere chiamata solo da un utente autenticato
+Access constraints: it can only be called by a logged in user
 
-__Inserimento dati partita completata__
+__Insert data about a completed match__
 
-URL: `/memegame/matches`
+URL: `/api/matches`
 
 HTTP method: POST
 
-Descrizione: inserisce nel database i dati della partita appena completata dall'utente (autenticato) corrente
+Description: it inserts data about the match completed by the current user
 
 Request parameters: None
 
@@ -343,49 +302,49 @@ Request body content:
 ```
 
 Response code:
-- `201 Created`
-- `401 Unauthorized`: utente non autenticato
-- `500 Internal server error`: errore generico
+- `201 Created`: success
+- `401 Unauthorized`: user not authenticated
+- `500 Internal server error`: generic error
 
-Vincoli di accesso: può essere chiamata solo da un utente autenticato
+Access constraints: it can only be called by a logged in user
 
 
 ## Database Tables
 
-- Tabella `user` - contiene:
-  - `UserId`: id dell'utente, chiave primaria
-  - `Username`: username dell'utente
-  - `Name`: nome dell'utente
-  - `Surname`: cognome dell'utente
-  - `Password`: password (crittografata) dell'utente
-  - `Salt`: sale associato alla password dell'utente
-- Tabella `match` - contiene:
-  - `MatchId`: chiave primaria (autoincrementale) della partita 
-  - `UserId`: chiave esterna all'id dell'utente che ha giocato la partita
-  - `Date`: data della registrazione della partita, in formato `YYYY-MM-DD`
-- Tabella `round` - contiene:
-  - `MatchId`: chiave esterna all'id della partita e chiave primaria del round, insieme a _roundId_ (costituisce un indice unico con _memeId_)
-  - `RoundId`: valore compreso tra 1 e 3, chiave primaria del round, insieme a _matchId_
-  - `Guessed`: valore booleano (nel database, intero pari a 0 o 1), indica se l'utente ha indovinato il meme per il round
-  - `MemeId`: chiave esterna all'id del meme mostrato per il round corrente (costituisce un indice unico con _matchId_)
-  - `CaptionId`: chiave esterna (eventualmente _null_) alla didascalia selezionata dall'utente per il round corrente
-- Tabella `caption`: - contiene:
-  - `CaptionId`: chiave primaria (autoincrementale) della didascalia
-  - `Text`: testo della didascalia
-- Tabella `meme`: - contiene:
-  - `MemeId`: chiave primaria (autoincrementale) del meme
-  - `Name`: nome del meme (come immagine), con path relativo alla cartella `/meme/`
-- Tabella `correct_caption` - rappresenta un'associazione molti-a-molti tra un meme e le sue didascalie corrette:
-  - `CaptionId`: chiave esterna all'id della didascalia
-  - `MemeId`: chiave esterna all'id del meme
+- Table `user` - it is associated with a registered user:
+  - `UserId`: identifies a registered user
+  - `Username`: unique in the database
+  - `Password`: encrypted password
+  - `Salt`: salt associated with the given password
+- Table `match` - it is associated with a complete (3-round) match:
+  - `MatchId`: identifies a match
+  - `UserId`: user who played the match
+  - `Date`: date and time of the match, in format `YYYY-MM-DDThh:mm:ss`
+- Table `round` - it is associated with a single round of a match:
+  - `MatchId`: it refers to the associated match and it identifies a round together with _roundId_ ; it forms a unique index with _memeId_
+  - `RoundId`: it identifies a round together with _matchId_ and it has a value between 1 and 3
+  - `Guessed`: boolean (stores as an integer equal to 0 or 1) that indicates whether the user has chosen the correct caption for the round
+  - `MemeId`: it refers to the meme shown during this round (it forms a unique index together with _matchId_)
+- Table `caption`: - it is associated with a caption:
+  - `CaptionId`: it identifies a caption
+  - `Text`: caption text, unique in the database
+- Table `meme`: - it is associated with a meme:
+  - `MemeId`: it identifies a meme
+  - `Name`: meme name (with extension), with relative path in the folder `/meme/`
+- Table `correct_caption` - it represent a N-to-N association among memes and their correct captions:
+  - `CaptionId`: it refers to the caption
+  - `MemeId`: it refers to the meme
 
 ## Main React Components
 
-- `ListOfSomething` (in `List.js`): component purpose and main functionality
-- `GreatButton` (in `GreatButton.js`): component purpose and main functionality
-- ...
-
-(only _main_ components, minor ones may be skipped)
+- `App` (in `App.jsx`): application skeleton, wraps all other components and handles session retrieval
+- `HomeComponent` (in `HomeComponent.jsx`): homepage at the root path, handles navigation to other components
+- `LoginComponent` (in `LoginComponent.jsx`): it contains a login form in the center of the page, with the possibility of returning to the homepage
+- `HeaderComponent` (in `HeaderComponent.jsx`): header of all the application pages, handles navigation to user page, logout and homepage
+- `GameRoundComponent` (in `GameRoundComponent.jsx`): it contains the game elements (timer, meme, captions, round result at the end)
+- `GameSummaryComponent` (in `GameSummaryComponent.jsx`): it contains the final result of a 3-round game, with total points gained, memes guessed and their selected captions
+- `HistoryComponent` (in `HistoryComponent.jsx`): it contains the history of past games of the user (if logged in), showing some user statistics and the details for each game
+- `NotFoundComponent` (in `NotFoundComponent.jsx`): error page, used to handle invalid routes; it allows to reach the home page and to access all the functionalities inside the header component
 
 ## Screenshot
 

@@ -1,15 +1,7 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap-icons/font/bootstrap-icons.css';
 import {Button, Col, Container, Row} from "react-bootstrap"
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 function HomeComponent(props) {
-
-    const navigate = useNavigate();
-
-    const handlePlay = () => {
-
-    }
 
     return (
         <Row className="min-vh-100 main align-items-center justify-content-center">

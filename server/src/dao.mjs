@@ -172,7 +172,7 @@ async function getNotAssociatedCaptions(memeId) {
 
 // Inserts a new match and returns its id
 async function addMatch(userId) {
-	const today = dayjs().format("YYYY-MM-DD");
+	const today = dayjs().format("YYYY-MM-DDThh:mm:ss");
 	const query = "INSERT INTO MATCH (UserId, Date) VALUES (?, ?)";
 	return new Promise((resolve, reject) => {
 		db.run(query, [userId, today], function (err) {

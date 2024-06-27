@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
-import { Card, Col, Container, Image, Nav, Row, Table } from "react-bootstrap";
+import { Card, Col, Container, Row, Table } from "react-bootstrap";
 import dayjs from "dayjs";
 import { API, SERVER_URL } from "../API.mjs";
 import "./HistoryComponent.css"
-import { Link } from "react-router-dom";
 
 
 function HistoryComponent(props) {
 
-    const [user, setUser] = useState(undefined);
     const [history, setHistory] = useState([]);
 
     let ignore = false;
@@ -17,12 +15,7 @@ function HistoryComponent(props) {
             ignore = true;
             API.getHistory()
                 .then(historyResult => {
-                    API.getUserInfo()
-                        .then(userResult => {
-                            setHistory(historyResult);
-                            setUser(userResult);
-                        })
-                        .catch(err => console.log(err))
+                    setHistory(historyResult);
                 })
                 .catch(err => console.log(err));
         }
@@ -31,7 +24,7 @@ function HistoryComponent(props) {
     return (
         <Row className="d-flex justify-content-center main min-vh-100">
             <Col lg={3} className="bg-light">
-                <UserInfo username={user && user.username} history={history} ></UserInfo>
+                <UserInfo username={props.user && props.user.username} history={history} ></UserInfo>
             </Col>
             <Col lg={9}>
                 <GameHistory history={history} ></GameHistory>
@@ -47,15 +40,15 @@ function UserInfo(props) {
             .map(game => game.rounds
                 .map(round => round.points)
                 .reduce((a, b) => a + b))
-    //console.log(props.history  && 
-      //  props.history.map(game => game.rounds.map(round => round.points).reduce((a, b) => a+b)).reduce((a, b) => a + b));
         .reduce((a, b) => a + b) / (15 * numGames);
 
     return (
         <Container fluid className="d-flex flex-wrap h-100 align-items-center user-info">
             <Row className="w-100">
                 <Col lg={3} className="user-info">
-                    <div>{`@${props.username}`}</div>
+                    <div>
+                        {`@${props.username}`}
+                    </div>
                     <div>
                         <strong>Games played: </strong>{numGames}
                     </div>
@@ -112,7 +105,6 @@ function PastGamesList(props) {
 }
 
 function PastGame(props) {
-
     return (
         <tr>
             <td className="game-info">

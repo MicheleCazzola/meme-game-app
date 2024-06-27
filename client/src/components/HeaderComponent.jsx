@@ -1,7 +1,8 @@
 import {Button, Col, Navbar, Row} from "react-bootstrap";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { API } from "../API.mjs";
 import "./HomeComponent.css"
-import {API} from "../API.mjs";
+import "./HeaderComponent.css"
 
 function HeaderComponent(props) {
     const navigate = useNavigate();
@@ -20,6 +21,9 @@ function HeaderComponent(props) {
         if (props.game) {
             event.preventDefault();
         }
+        else {
+            props.setHistoryView(false);
+        }
     }
 
     const handleLeave = () => {
@@ -35,35 +39,48 @@ function HeaderComponent(props) {
     return(
         <Navbar className="bg-primary navbar-dark" fixed="top">
             <Row className="w-100 px-2 py-1 align-items-center">
-                <Col className="col-6 d-flex">
-                    <NavLink to="/" id="home" style={props.game ? {cursor: "default"} : {cursor: "pointer"}} onClick={handleGoHome}>
-                        <Navbar.Brand className="mx-1">
-                            <i className="bi bi-emoji-grin"></i> What do you meme?
-                        </Navbar.Brand>
-                    </NavLink>
-                </Col>
+                <AppLogo game={props.game} handleGoHome={handleGoHome} />
                 {
-                    props.isLoggedIn && !props.game &&
-                    <>
-                        <Col className="col-6 d-flex justify-content-end">
-                            {
-                                props.historyView ?
-                                    <Button onClick={() => handleLeave()}>
-                                        Go home
-                                    </Button> :
-                                    <Button onClick={() => handleHistory()}>
-                                        My past games
-                                    </Button>
-                            }
-                            <Button onClick={() => handleLogout()}>
-                                Logout
-                            </Button>
-                        </Col>
-                    </>
+                    props.isLoggedIn && !props.game && 
+                        <Actions historyView={props.historyView} handleLogout={handleLogout}
+                            handleLeave={handleLeave} handleGoHome={handleGoHome} handleHistory={handleHistory} />
                 }
             </Row>
         </Navbar>
     );
+}
+
+function AppLogo(props) {
+    return (
+        <Col className="col-6 d-flex">
+            <NavLink to="/" id="home" className={props.game ? "not-active" : "active"} onClick={(event) => props.handleGoHome(event)}>
+                <Navbar.Brand className="mx-1">
+                    <i className="bi bi-emoji-grin"></i> What do you meme?
+                </Navbar.Brand>
+            </NavLink>
+        </Col>
+    )
+}
+
+function Actions(props) {
+    return (
+        <>
+            <Col className="col-6 d-flex justify-content-end">
+                {
+                    props.historyView ?
+                        <Button onClick={() => props.handleLeave()}>
+                            Go home
+                        </Button> :
+                        <Button onClick={() => props.handleHistory()}>
+                            My past games
+                        </Button>
+                }
+                <Button onClick={() => props.handleLogout()}>
+                    Logout
+                </Button>
+            </Col>
+        </>
+    )
 }
 
 export default HeaderComponent;

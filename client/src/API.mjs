@@ -1,8 +1,7 @@
 import { Round, Match, MemeRound, User } from "./models.mjs";
 
 const SERVER_URL = "http://localhost:3001"
-const BASE_URL = "/memegame"
-const MEMES_URL = "/meme"
+const BASE_URL = "/api"
 
 const logIn = async (credentials) => {
     const response = await fetch(`${SERVER_URL}${BASE_URL}/sessions`, {
@@ -15,7 +14,7 @@ const logIn = async (credentials) => {
     });
     if(response.ok) {
         const user = await response.json();
-        return user;
+        return new User(user.username, user.userId);
     }
     else {
         const errDetails = await response.text();
@@ -30,8 +29,8 @@ const getUserInfo = async () => {
     });
 
     if (response.ok) {
-        const userInfo = await response.json();
-        return userInfo;
+        const user = await response.json();
+        return new User(user.username, user.userId);
     }
     const errDetails = await response.json();
     throw errDetails;
@@ -54,7 +53,7 @@ const getGameData = async (isLoggedIn) => {
     });
     if (response.ok) {
         const gameData = await response.json();
-        return gameData;
+        return gameData.map(round => new MemeRound(round.memeId, round.name, round.captions));
     }
     const errDetails = await response.json();
     throw errDetails;
@@ -95,8 +94,8 @@ const getHistory = async () => {
     });
 
     if(response.ok) {
-        const result = await response.json();
-        return result;
+        const results = await response.json();
+        return results.map(result => new Match(result.matchId, result.date, result.points, result.rounds));
     }
     const errDetails = await response.json();
     return errDetails;

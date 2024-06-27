@@ -1,5 +1,5 @@
 // imports
-import express, { json, request } from 'express';
+import express, { json } from 'express';
 import { getMatchMemes, getSingleRoundMeme, getUser, getUserMatchesHistory, registerMatch, getAllAssociatedCaptions } from "./src/controller.mjs";
 import morgan from 'morgan';
 import cors from "cors"
@@ -8,10 +8,8 @@ import LocalStrategy from 'passport-local'
 import session from 'express-session';
 import { body, param, validationResult } from 'express-validator';
 
-
-
 // Init application
-const baseURL = "/memegame"
+const baseURL = "/api"
 const app = new express();
 const port = 3001;
 const corsOptions = {

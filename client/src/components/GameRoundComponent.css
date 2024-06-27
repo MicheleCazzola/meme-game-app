@@ -36,3 +36,11 @@
 .row.actions {
     height: 37.6px;
 }
+
+#game-info {
+    height: 5rem;
+}
+
+#meme-container {
+    height: 31rem;
+}

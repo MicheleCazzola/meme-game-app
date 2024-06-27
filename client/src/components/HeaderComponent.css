@@ -1,0 +1,7 @@
+a.active {
+    cursor: pointer;
+}
+
+a.not-active {
+    cursor: default;
+}
