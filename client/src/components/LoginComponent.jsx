@@ -9,12 +9,18 @@ function LoginComponent(props) {
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [validInputs, setValidInputs] = useState(true);
     const [loginFailed, setLoginFailed] = useState(false);
 
     const handleLogin = (event) => {
         event.preventDefault();
-
-        API.logIn({username, password})
+        console.log(username.trim());
+        if(username.trim().length == 0 || password.trim().length == 0) {
+            setValidInputs(false);
+        }
+        else {
+            setValidInputs(true);
+            API.logIn({username, password})
             .then(result => {
                 props.setIsLoggedIn(true);
                 props.setUser(result);
@@ -22,12 +28,14 @@ function LoginComponent(props) {
                 navigate("/");
             })
             .catch(() => setLoginFailed(true));
+        }
     }
 
     const reset = () => {
         setUsername("");
         setPassword("");
         setLoginFailed(false);
+        setValidInputs(true);
     }
 
     return (
@@ -58,6 +66,7 @@ function LoginComponent(props) {
                         <Button variant='danger' className="mx-1" onClick={() => reset()}>Reset</Button>
                     </Container> 
                     {loginFailed && <Alert variant="danger" className="my-1">Incorrect username and/or password</Alert>}
+                    {!validInputs && <Alert variant="warning" className="my-1">Username and/or password format not valid: at least one non-space character needed</Alert>}
                 </Form>
                 <Container className="d-flex justify-content-end px-0"><Link to="/">Go back</Link></Container>        
             </Col>
