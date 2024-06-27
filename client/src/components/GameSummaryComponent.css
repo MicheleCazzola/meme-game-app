@@ -4,9 +4,13 @@
     object-fit: contain;
 }
 
+.points {
+    height: 2rem;
+}
+
 .results {
-    padding-top: 3rem;
     height: 33rem;
+    padding-top: 1rem;
 }
 
 .actions {
@@ -29,17 +33,9 @@
     height: 6rem;
 }
 
-.row.not-guessed {
-    flex: 1 1 auto;
-    align-items: center;
-}
-
-.container-fluid.not-guessed {
+.container-fluid.guessed {
     display: flex;
     flex-direction: column;
-    background-color: rgb(240, 100, 100);
-}
-
-.container-fluid.guessed {
+    flex-grow: 1;
     background-color: rgb(88, 195, 88);
 }

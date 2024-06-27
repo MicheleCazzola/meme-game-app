@@ -34,14 +34,15 @@ function GameRoundComponent(props) {
     
     useEffect(() => {
         let t;
-        if(mode === "playing" && missingTime > 0) {
-            t = setTimeout(() => {
-                const endOfRound = missingTime === 1;
-                setMissingTime(curr => curr-1);
-                if(endOfRound && mode === "playing"){
-                    handleConfirm(false);
-                }
-            }, 1000);
+        if(mode === "playing") {
+            if(missingTime > 0) {
+                t = setTimeout(() => {
+                    setMissingTime(curr => curr-1);
+                }, 1000);
+            }
+            else if(missingTime === 0) {
+                handleConfirm(false);
+            }
         }
             
         return () => clearTimeout(t);
@@ -54,7 +55,7 @@ function GameRoundComponent(props) {
                     roundId: id+1,
                     memeId: round.memeId,
                     name: round.name,
-                    guessed: results[id]
+                    guessed: results[id] || false
                 }
             });
             API.saveGameResults(obj)
@@ -65,6 +66,9 @@ function GameRoundComponent(props) {
 
     const handleConfirm = (confirmed) => {
         setMode("waiting");
+        if(roundId == 2 || !props.isLoggedIn) {
+            props.setGame(false);
+        }
         API.getCorrectCaptions(rounds[roundId].memeId)
             .then(captions => {
                 setMode("result");
@@ -112,6 +116,7 @@ function GameRoundComponent(props) {
             };
         });
         props.setGameResult(r);
+        props.setGame(false);
         navigate("/game-summary");
     }
 
@@ -127,8 +132,11 @@ function GameRoundComponent(props) {
                     <Row>
                         <Col lg={4}>
                             <Container fluid className="d-flex justify-content-center align-items-center" style={{height: "5rem"}}>
-                                <Row>
-                                    <Col lg={4}>
+                                <Row className="align-items-end justify-content-center">
+                                    {props.isLoggedIn && <Col lg={mode === "playing" && missingTime > 0 ? 9 : 12} className="py-1 my-0" as={"h2"}>
+                                        {`Round ${roundId+1}`}
+                                    </Col>}
+                                    <Col lg={3}>
                                         {mode === "playing" && missingTime > 0 && <Timer time={missingTime}></Timer>}
                                     </Col>
                                 </Row>
@@ -177,9 +185,9 @@ function GameRoundComponent(props) {
 
 function Timer(props) {
     return(
-        <div className="timer">
+        <span className="timer">
             {":" + `${props.time}`.padStart(2, "0")}
-        </div>
+        </span>
     )
 }
 
@@ -189,8 +197,8 @@ function Captions(props) {
         if(props.mode === "playing" && props.selected === element.captionId) return selected;
         if(props.mode === "result") {
             if (!props.correctCaptions && props.selected === element.captionId) return guessed;
-            if (props.correctCaptions && props.selected === element.captionId) return selected;
             if (props.correctCaptions && props.correctCaptions.includes(element.captionId)) return solutionNotSelected;
+            if (props.correctCaptions && props.selected === element.captionId) return selected;
         }
     }
 
@@ -235,11 +243,10 @@ function Captions(props) {
                                 Go to summary
                             </Button>
                     }
-                    &nbsp;
                 </Col>
-                {/*<Col lg={6} className="d-flex justify-content-end">
+                {props.mode === "result" && props.next !== "newGame" && <Col lg={6} className="d-flex justify-content-end">
                     <Button variant="danger" onClick={() => props.handleLeave()}>Leave game</Button>
-                </Col>*/}
+                </Col>}
             </Row>
             
         </>

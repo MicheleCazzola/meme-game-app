@@ -1,20 +1,22 @@
-import { useContext, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from 'react'
 import { Outlet, Route, Routes } from 'react-router-dom';
+import { Container, Row } from 'react-bootstrap';
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/js/src/collapse.js"
+import './App.css'
 import HeaderComponent from './components/HeaderComponent';
 import HomeComponent from './components/HomeComponent';
-import { Container, Row } from 'react-bootstrap';
 import LoginComponent from './components/LoginComponent';
 import GameRoundComponent from './components/GameRoundComponent';
-import RoundSummaryComponent from './components/RoundSummaryComponent';
 import GameSummaryComponent from './components/GameSummaryComponent';
 import NotFoundComponent from './components/NotFoundComponent';
+import HistoryComponent from './components/HistoryComponent';
+
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [game, setGame] = useState(false);
+    const [historyView, setHistoryView] = useState(false);
     const [gameResult, setGameResult] = useState();
 
     return(
@@ -22,7 +24,8 @@ function App() {
             <Routes>
                 <Route path="/" element={
                     <>
-                        <HeaderComponent isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} game={game} />
+                        <HeaderComponent isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} game={game}
+                            historyView={historyView} setHistoryView={setHistoryView} />
                             <Container fluid>
                                     <Outlet />
                         </Container>
@@ -37,15 +40,15 @@ function App() {
                     <Route path="/game" element={
                         <GameRoundComponent isLoggedIn={isLoggedIn} game={game} setGame={setGame} setGameResult={setGameResult} />
                     } />
-                    {/*<Route path="/round-summary/:roundId" element={
-                        <RoundSummaryComponent  />
-                    } />*/}
                     <Route path="/game-summary" element={
                         <GameSummaryComponent gameResult={gameResult} />
                     } />
-                    {/*<Route path="*" element={ 
+                    <Route path="/history" element={
+                        <HistoryComponent />
+                    }></Route>
+                    {<Route path="*" element={ 
                         <NotFoundComponent /> 
-                    } />*/}
+                    } />}
 
                 </Route>
             </Routes>

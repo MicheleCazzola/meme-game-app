@@ -23,6 +23,20 @@ const logIn = async (credentials) => {
     }
 }
 
+const getUserInfo = async () => {
+    const response = await fetch(`${SERVER_URL}${BASE_URL}/sessions/current`, {
+        method: "GET",
+        credentials: "include"
+    });
+
+    if (response.ok) {
+        const userInfo = await response.json();
+        return userInfo;
+    }
+    const errDetails = await response.json();
+    throw errDetails;
+}
+
 const logOut = async() => {
     const response = await fetch(`${SERVER_URL}${BASE_URL}/sessions/current`, {
         method: 'DELETE',
@@ -59,7 +73,7 @@ const getCorrectCaptions = async (memeId) => {
     throw errDetails;
 }
 
-const saveGameResults = async(gameObj) => {
+const saveGameResults = async (gameObj) => {
     const response = await fetch(`${SERVER_URL}${BASE_URL}/matches`, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
@@ -74,5 +88,19 @@ const saveGameResults = async(gameObj) => {
     throw errDetails;
 }
 
-const API = {logIn, logOut, getGameData, getCorrectCaptions, saveGameResults};
+const getHistory = async () => {
+    const response = await fetch(`${SERVER_URL}${BASE_URL}/matches/history`, {
+        method: "GET",
+        credentials: "include"
+    });
+
+    if(response.ok) {
+        const result = await response.json();
+        return result;
+    }
+    const errDetails = await response.json();
+    return errDetails;
+}
+
+const API = {logIn, getUserInfo, logOut, getGameData, getCorrectCaptions, saveGameResults, getHistory};
 export {API, SERVER_URL};

@@ -4,25 +4,40 @@ import { Link } from "react-router-dom";
 import "./GameSummaryComponent.css"
 
 function GameSummaryComponent(props) {
+    const totalPoints = props.gameResult && 5 * props.gameResult.map(result => result.guessed || 0).reduce((a, b) => a + b);
     return (
         <Row className="min-vh-100 main justify-content-center">
             <Col lg={10}>
                 <Container fluid>
-                    <Row className={props.gameResult && "results"}>
-                        {props.gameResult ? props.gameResult.map((result, id) =>
-                                <RoundSummaryComponent 
-                                    key={id}
-                                    guessed={result.guessed}
-                                    roundId={result.roundId}
-                                    meme={result.meme}
-                                    caption={result.caption} />) 
+                    <Row className={props.gameResult && "points"}>
+                        {
+                            props.gameResult && 
+                                <Col as={"h4"}>
+                                    Points gained: {totalPoints}
+                                </Col>
+                        }
+                    </Row>
+                    <Row className={props.gameResult && totalPoints > 0 && "results justify-content-center"}>
+                        {props.gameResult ? 
+                            totalPoints > 0 ?
+                                props.gameResult.map((result, id) =>
+                                    <RoundSummaryComponent 
+                                        key={id}
+                                        guessed={result.guessed}
+                                        roundId={result.roundId}
+                                        meme={result.meme}
+                                        caption={result.caption} />) 
                                 : 
                                 <Col lg={12} as={"h2"}>
-                                    No results to show
+                                    No guessed memes, try again!
                                 </Col>
-                            }
+                            :    
+                            <Col lg={12} as={"h2"}>
+                                    No results to show
+                                </Col>    
+                        }
                     </Row>
-                    <Row className="actions align-content-center">
+                    <Row className="actions align-content-center my-3">
                         <Col lg={6} className="d-flex">
                             <Link to="/game">
                                 <Button variant="primary" className="btn-c">New game</Button>
@@ -43,8 +58,8 @@ function GameSummaryComponent(props) {
 function RoundSummaryComponent(props) {
     return (
         <>
-            {props.guessed ? 
-                <Col lg={4}>
+            {props.guessed && 
+                <Col lg={4} className="d-flex">
                     <Container fluid className="guessed">
                         <Row className="title-row">
                             <Col lg={12} as={"h4"} className="d-flex justify-content-center my-2">Round {props.roundId}</Col>
@@ -66,20 +81,8 @@ function RoundSummaryComponent(props) {
                             </Col>
                         </Row>
                     </Container>
-                </Col> :
-                <Col lg={4} className="d-flex align-content-center not-guessed">
-                    <Container fluid className="not-guessed">
-                        <Row className="title-row">
-                                <Col lg={12} as={"h4"} className="d-flex justify-content-center my-2">Round {props.roundId}</Col>
-                        </Row>
-                        <Row className="not-guessed grow">
-                            <Col lg={12} as={"h6"} className="d-flex justify-content-center" >
-                                Not guessed
-                            </Col>
-                        </Row>
-                    </Container>
                 </Col>
-        }
+            }
         </>
     );
 }
