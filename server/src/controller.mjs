@@ -29,9 +29,8 @@ async function getUser(username, password) {
 
 // Memes
 
-// Get three different memes and caption requested
-async function getMatchMemes() {
-    const numberOfMemes = 3;
+// Get different memes and captions requested
+async function getMatchMemes(numberOfMemes) {
     const memes = await getRandomMemes(numberOfMemes);
 
     let gameRounds = [];
@@ -56,32 +55,6 @@ async function getMatchMemes() {
     };
 
     return gameRounds;
-}
-
-// Get a single meme and the requested captions
-async function getSingleRoundMeme() {
-    const numberOfMemes = 1;
-
-    const meme = (await getRandomMemes(numberOfMemes))[0];
-    if (meme.error) {
-        return meme;
-    }
-
-    const correctCaptions = await getCorrectCaptions(meme.memeId, 2);
-    if (correctCaptions.error) {
-        return correctCaptions;
-    }
-
-    const otherCaptions = await getNotAssociatedCaptions(meme.memeId);
-    if (otherCaptions.error) {
-        return otherCaptions;
-    } 
-
-    const captions = shuffle(correctCaptions, otherCaptions);
-
-    const gameRound = new MemeRound(meme.memeId, meme.name, captions);
-
-    return [gameRound];
 }
 
 // Captions
@@ -141,4 +114,4 @@ async function getUserMatchesHistory(user) {
 }
 
 
-export {getUser, getMatchMemes, getSingleRoundMeme, getAllAssociatedCaptions, registerMatch, getUserMatchesHistory}
+export {getUser, getMatchMemes, getAllAssociatedCaptions, registerMatch, getUserMatchesHistory}

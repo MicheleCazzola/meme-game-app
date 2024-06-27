@@ -1,6 +1,6 @@
 // imports
 import express, { json } from 'express';
-import { getMatchMemes, getSingleRoundMeme, getUser, getUserMatchesHistory, registerMatch, getAllAssociatedCaptions } from "./src/controller.mjs";
+import { getMatchMemes, getUser, getUserMatchesHistory, registerMatch, getAllAssociatedCaptions } from "./src/controller.mjs";
 import morgan from 'morgan';
 import cors from "cors"
 import passport from 'passport';
@@ -61,7 +61,7 @@ const isLoggedIn = (req, res, next) => {
     return res.status(401).json({error: 'Not authorized'});
 }
 
-// Validator for request body parameters
+// Validator for express-validator checks
 const validateRequest = (req, res, next) => {
 	const errors = validationResult(req)
 	if (!errors.isEmpty()) {
@@ -112,7 +112,7 @@ app.delete(
 app.get(
     `${baseURL}/memes/match`,
 	isLoggedIn,
-    (req, res) => getMatchMemes()
+    (req, res) => getMatchMemes(3)
         .then(result => {
             if (result.error) {
                 res.status(404).json(result);
@@ -127,7 +127,7 @@ app.get(
 // Get meme for a single round match, with its captions
 app.get(
     `${baseURL}/memes/single`,
-    (req, res) => getSingleRoundMeme()
+    (req, res) => getMatchMemes(1)
         .then(result => {
             if (result.error) {
                 res.status(404).json(result);
@@ -192,8 +192,7 @@ app.get(
             }
         })
         .catch(err => res.status(500).json(err))
-)
-
+);
 
 // activate the server
 app.listen(port, () => {

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import {Button, Col, Navbar, Row} from "react-bootstrap";
 import { NavLink, useNavigate } from "react-router-dom";
 import { API } from "../API.mjs";

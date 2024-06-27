@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { Alert, Button, Card, Col, Container, Image, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";

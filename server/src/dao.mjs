@@ -56,24 +56,6 @@ async function userLogin(username, password) {
     });
 }
 
-// Retrieves id of given user
-async function getUserId(username) {
-	const query = "SELECT UserId FROM USER WHERE Username = ?"
-	return new Promise((resolve, reject) => {
-		db.get(query, [username], (err, row) => {
-			if (err) {
-				reject(err);
-			}
-			else if (!row) {
-				resolve({error: `User ${username} not found`});
-			}
-			else {
-				resolve(row.UserId);
-			}
-		});
-	});
-}
-
 // Retrieves random memes from the database, in the specified quantity
 async function getRandomMemes(number) {
     const query =
@@ -255,4 +237,4 @@ async function getRoundsOfMatch(matchId) {
 	});
 }
 
-export {userLogin, getUserId, getRandomMemes, getCorrectCaptions, getNotAssociatedCaptions, addMatch, addRound, getUserMatches, getRoundsOfMatch};
+export {userLogin, getRandomMemes, getCorrectCaptions, getNotAssociatedCaptions, addMatch, addRound, getUserMatches, getRoundsOfMatch};

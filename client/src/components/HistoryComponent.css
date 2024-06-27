@@ -42,10 +42,6 @@ td.game-info {
     height: auto;
 }
 
-.card.body {
-    padding-top: 1rem;
-}
-
 .card-body.guessed {
     background-color: rgb(88, 195, 88);
 }

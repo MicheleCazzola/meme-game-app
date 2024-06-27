@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import { Card, Col, Container, Row, Table } from "react-bootstrap";
 import dayjs from "dayjs";
@@ -55,7 +57,7 @@ function UserInfo(props) {
                     {
                         numGames > 0 && 
                         <div>
-                            <strong>Meme guessing rate: </strong>{guessRate.toFixed(2)} %
+                            <strong>Correctly guessed memes: </strong>{guessRate.toFixed(2)} %
                         </div>
                     }
                 </Col>

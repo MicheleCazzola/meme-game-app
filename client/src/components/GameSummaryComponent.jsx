@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { Button, Card, Col, Container, Image, Row } from "react-bootstrap";
 import { SERVER_URL } from "../API.mjs";
 import { Link } from "react-router-dom";
@@ -82,7 +83,7 @@ function RoundSummaryComponent(props) {
     );
 }
 
-function Actions(props) {
+function Actions() {
     return (
         <>
             <Col lg={6} className="d-flex">
