@@ -130,9 +130,9 @@ function RoundResult(props) {
     return (
         <td>
             <Card className="my-0 mx-0">
-                <Card.Body className={`px-1 py-1 ${props.points === 5 ? "guessed" : "not-guessed"}`}>
+                <Card.Body className={`px-1 py-1 d-flex flex-column ${props.points === 5 ? "guessed" : "not-guessed"}`}>
                     <Card.Img className={`meme`} src={`${SERVER_URL}/${props.meme}`} />
-                    <Card.Text className="py-1">
+                    <Card.Text className="py-1 mt-auto">
                         <strong>Points: </strong>{`${props.points}`}
                     </Card.Text>
                 </Card.Body>

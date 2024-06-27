@@ -1,4 +1,4 @@
-import { Round, Match, MemeRound, User } from "./models.mjs";
+import { Match, MemeRound, User } from "./models.mjs";
 
 const SERVER_URL = "http://localhost:3001"
 const BASE_URL = "/api"
