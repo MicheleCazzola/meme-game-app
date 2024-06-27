@@ -14,109 +14,109 @@
 ## API Server
 ### Authentication and session
 
-__Login__
+#### Login
 
-URL: `/api/sessions`
+***URL***: `/api/sessions`
 
-HTTP method: POST
+***HTTP method***: POST
 
-Descriptions: it performs login
+***Description***: it performs login
 
-Request parameters: None
+***Request parameters***: None
 
-Request body content:
-```
+***Request body content***:
+```JSON
 {
 	"username": "user1",
 	"password": "pwd1" 
 }
 ```
 
-Response code:
+***Response code***:
 - `201 Created`: success
 - `401 Unauthorized`: wrong username and/or password 
 - `500 Internal server error`: generic error
 
-Response body content:
-```
+***Response body content***:
+```JSON
 {	
 	"userId": 1
 	"username": "user1"
 }
 ```
 
-Access constraints: None
+***Access constraints***: None
 
-__Retrieve user information__
+#### Retrieve user information
 
-URL: `/api/sessions/current`
+***URL***: `/api/sessions/current`
 
-HTTP method: GET
+***HTTP method***: GET
 
-Description: it retrieves information about the authenticated user, if present
+***Description***: it retrieves information about the authenticated user, if present
 
-Request parameters: None
+***Request parameters***: None
 
-Request body content: None
+***Request body content***: None
 
-Response code:
+***Response code***:
 - `200 OK`: success
 - `401 Unauthorized`: no active session (not authenticated user)
 - `500 Internal server error`: generic error
 
-Response body content:
-```
+***Response body content***:
+```JSON
 {
 	"userId": 1
 	"username": "user1"
 }
 ```
 
-Access constraints: it can only be called by a logged in user
+***Access constraints***: it can only be called by a logged in user
 
-__Logout__
+#### Logout
 
-URL: `/api/sessions/current`
+***URL***: `/api/sessions/current`
 
-HTTP method: DELETE
+***HTTP method***: DELETE
 
-Descrption: it performs logout
+***Description***: it performs logout
 
-Request parameters: None
+***Request parameters***: None
 
-Request body content: None
+***Request body content***: None
 
-Response code:
+***Response code***:
 - `200 OK`: success
 - `401 Unauthorized`: user not authenticated
 - `500 Internal server error`: generic error
 
-Response body content: None
+***Response body content***: None
 
-Access constraints: it can only be called by a logged in user
+***Access constraints***: it can only be called by a logged in user
 
 ### Meme
 
-__Retrieve 3-round game data__
+#### Retrieve 3-round game data
 
-URL: `/api/memes/match`
+***URL***: `/api/memes/match`
 
-HTTP method: GET
+***HTTP method***: GET
 
-Description: it retrieves three different memes, with random criterion, for a 3-round match; for each of them, it also retrieves seven captions, where exactly two are correct for it. 
+***Description***: it retrieves three different memes, with random criterion, for a 3-round match; for each of them, it also retrieves seven captions, where exactly two are correct for it. 
 
-Request parameters: None
+***Request parameters***: None
 
-Request body content: None
+***Request body content***: None
 
-Response code:
+***Response code***:
 - `200 OK`: success
 - `401 Unauthorized`: user not authenticated
 - `404 Not found`: data not found
 - `500 Internal server error`: generic error
 
-Response body content:
-```
+***Response body content***:
+```JSON
 [
 	{	
 		"memeId": 2,
@@ -142,27 +142,27 @@ Response body content:
 ]
 ```
 
-Access constraints: it can only be called by a logged in user
+***Access constraints***: it can only be called by a logged in user
 
-__Retrieve single-round game data__
+#### Retrieve single-round game data
 
-URL: `/api/memes/single`
+***URL***: `/api/memes/single`
 
-HTTP method: GET
+***HTTP method***: GET
 
-Description: it retrieves one meme with random criterion, together with seven captions, where exactly two are correct for it.
+***Description***: it retrieves one meme with random criterion, together with seven captions, where exactly two are correct for it.
 
-Request parameters: None
+***Request parameters***: None
 
-Response parameters: None
+***Request body content***: None
 
-Response code:
+***Response code***:
 - `200 OK`: success
 - `404 Not found`: data not found
 - `500 Internal server error`: generic error
 
-Response body content:
-```
+***Response body content***:
+```JSON
 [
 	{
 		"memeId": 6,
@@ -178,30 +178,30 @@ Response body content:
 ]
 ```
 
-Access constraints: None
+***Access constraints***: None
 
 ### Captions
 
-__Retrieve all captions associated with a specific meme__
+#### Retrieve all captions associated with a specific meme
 
-URL `/api/memes/:id/captions`
+***URL***: `/api/memes/:id/captions`
 
-HTTP method: GET
+***HTTP method***: GET
 
-Description: it retrieves all captions associated with the specified meme
+***Description***: it retrieves all captions associated with the specified meme
 
-Request parameters:
+***Request parameters***:
 - `id` - id of the meme to retrieve the associated captions for
 
-Request body content: None
+***Request body content***: None
 
-Response code:
+***Response code***:
 - `200 OK`: success
 - `404 Not found`: data not found
 - `500 Internal server error`: generic error
 
-Response body content:
-```
+***Response body content***:
+```JSON
 [
 	{
 		"captionId": 1,
@@ -215,29 +215,29 @@ Response body content:
 ]
 ```
 
-Access constraints: None
+***Access constraints***: None
 
 ### Match
 
-__Retrieve all matches completed by a user__
+#### Retrieve all matches completed by a user
 
-URL: `/api/matches/history`
+***URL***: `/api/matches/history`
 
-HTTP method: GET
+***HTTP method***: GET
 
-Description: it retrieves all the matches of the current user, together with the information about their rounds
+***Description***: it retrieves all the matches of the current user, together with the information about their rounds
 
-Request parameters: None
+***Request parameters***: None
 
-Request body content: None
+***Request body content***: None
 
-Response code:
+***Response code***:
 - `200 OK`: success
 - `401 Unauthorized`: user not authenticated
 - `500 Internal server error`: generic error
 
-Response body content:
-```
+***Response body content***:
+```JSON
 [
 	{	
 		"matchId": 1,
@@ -265,20 +265,20 @@ Response body content:
 ]
 ```
 
-Access constraints: it can only be called by a logged in user
+***Access constraints***: it can only be called by a logged in user
 
-__Insert data about a completed match__
+#### Insert data about a completed match
 
-URL: `/api/matches`
+***URL***: `/api/matches`
 
-HTTP method: POST
+***HTTP method***: POST
 
-Description: it inserts data about the match completed by the current user
+***Description***: it inserts data about the match completed by the current user
 
-Request parameters: None
+***Request parameters***: None
 
-Request body content: 
-```
+***Request body content***: 
+```JSON
 [
 	{	
 		"roundId": 1,
@@ -301,12 +301,14 @@ Request body content:
 ]
 ```
 
-Response code:
+***Response code***:
 - `201 Created`: success
 - `401 Unauthorized`: user not authenticated
 - `500 Internal server error`: generic error
 
-Access constraints: it can only be called by a logged in user
+***Response body content***: None
+
+***Access constraints***: it can only be called by a logged in user
 
 
 ## Database Tables
@@ -348,9 +350,19 @@ Access constraints: it can only be called by a logged in user
 
 ## Screenshot
 
-![Screenshot](./img/screenshot.jpg)
+***Screenshot of a guest user who made a wrong choice for the meme***
+
+![](./media/guest_wrong_choice.png)
+
+***Screenshot of a logged in user while playing the third round of the game, with 29 seconds left***
+
+![](./media/logged_in_playing.png)
 
 ## Users Credentials
 
-- "test1", "pwd1"
-- "test2", "pwd2"
+- First user:
+  - *username*: `test1`
+  - *password*: `pwd1`
+- Second user:
+  - *username*: `test2`
+  - *password*: `pwd2`
