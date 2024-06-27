@@ -1,5 +1,5 @@
 ###
-POST http://localhost:3001/memegame/sessions
+POST http://localhost:3001/api/sessions
 Content-Type: application/json
 
 {
@@ -8,22 +8,22 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:3001/memegame/sessions/current
+GET http://localhost:3001/api/sessions/current
 
 ###
-DELETE http://localhost:3001/memegame/sessions/current
+DELETE http://localhost:3001/api/sessions/current
 
 ###
-GET http://localhost:3001/memegame/memes/single
+GET http://localhost:3001/api/memes/single
 
 ###
-GET http://localhost:3001/memegame/memes/match
+GET http://localhost:3001/api/memes/match
 
 ###
-GET http://localhost:3001/memegame/memes/12/captions
+GET http://localhost:3001/api/memes/12/captions
 
 ###
-POST http://localhost:3001/memegame/matches
+POST http://localhost:3001/api/matches
 Content-Type: application/json
 
 [
@@ -48,4 +48,4 @@ Content-Type: application/json
 ]
 
 ###
-GET http://localhost:3001/memegame/matches/history
+GET http://localhost:3001/api/matches/history

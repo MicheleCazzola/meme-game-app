@@ -71,7 +71,11 @@ const validateRequest = (req, res, next) => {
 }
 
 // Login
-app.post(`${baseURL}/sessions/`, function(req, res, next) {
+app.post(`${baseURL}/sessions/`,
+    body("username").trim().isLength({min: 1}),
+    body("password").trim().isLength({min: 1}),
+    validateRequest,
+    function(req, res, next) {
     passport.authenticate('local', (err, user, info) => {
         if (err) {
 			return next(err);
