@@ -366,3 +366,6 @@
 - Second user:
   - *username*: `test2`
   - *password*: `pwd2`
+- Third user (clean):
+  - *username*: `mike`
+  - *password*: `mike`
